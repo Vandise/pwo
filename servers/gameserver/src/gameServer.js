@@ -2,6 +2,7 @@ import LoggerFactory from './util/logger/factory';
 import express       from 'express';
 import http          from 'http';
 import socketio      from 'socket.io';
+import ioClient      from 'socket.io-client';
 import extensions    from './ext';
 
 export default class GameServer {
@@ -43,11 +44,35 @@ export default class GameServer {
     });
   }
 
+  connectLoginServer() {
+    let lsTimer   = null;
+    const options = {
+      transports: ['websocket'],
+      timeout: 1000
+    };
+
+    this.lsSocket = ioClient.connect(`http://${this.loginHost}:${this.loginPort}`, options);
+
+    this.logger.info(`Attempting to connect to LS: ${this.loginHost}:${this.loginPort}`);
+
+    lsTimer = setInterval(() => {
+      if (this.lsSocket.connected) {
+        clearInterval(lsTimer);
+        return;
+      }
+      if (!this.lsSocket.connected) {
+        this.logger.info(`Unable to connect to LS: ${this.loginHost}:${this.loginPort}`);
+        return;
+      }
+    }, 2000);
+  }
+
   main() {
     this.app.set('port', this.port);
     this.io = socketio.listen(this.server);
 
     this.loadExtensions();
+    this.connectLoginServer();
 
     this.server.listen(this.app.get('port'), () => {
       this.logger.info('GameServer listening on port '+this.app.get('port')+' in '+this.env+' mode');
@@ -56,6 +81,7 @@ export default class GameServer {
   }
 
   close() {
+    this.lsSocket.disconnect(true);
     this.io.close();
     this.server.close();
   }

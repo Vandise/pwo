@@ -53,21 +53,21 @@
 
 	'use strict';
 
-	var _gameServer = __webpack_require__(2);
+	var _loginServer = __webpack_require__(2);
 
-	var _gameServer2 = _interopRequireDefault(_gameServer);
+	var _loginServer2 = _interopRequireDefault(_loginServer);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	(function () {
-	  var GS = new _gameServer2.default(process.argv);
+	  var LS = new _loginServer2.default(process.argv);
 
-	  GS.main();
+	  LS.main();
 
 	  process.stdin.resume();
 
 	  process.on('SIGINT', function () {
-	    GS.close();
+	    LS.close();
 	    process.exit(2);
 	  });
 	})();
@@ -102,11 +102,7 @@
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _socket3 = __webpack_require__(9);
-
-	var _socket4 = _interopRequireDefault(_socket3);
-
-	var _ext = __webpack_require__(10);
+	var _ext = __webpack_require__(9);
 
 	var _ext2 = _interopRequireDefault(_ext);
 
@@ -114,27 +110,19 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var GameServer = function () {
-	  function GameServer(argv) {
-	    _classCallCheck(this, GameServer);
+	var LoginServer = function () {
+	  function LoginServer(argv) {
+	    _classCallCheck(this, LoginServer);
 
 	    this.io = null;
 	    this.env = "dev";
 	    this.app = (0, _express2.default)();
 	    this.conn = null;
 	    this.root = __dirname;
-	    this.port = 9090;
+	    this.port = 4500;
 	    this.server = _http2.default.createServer(this.app);
-	    this.sessions = {};
+	    this.gameservers = {};
 	    this.express = _express2.default;
-
-	    this.loginPort = 4500;
-	    this.loginHost = 'localhost';
-	    this.lsSocket = null;
-
-	    this.dsPort = 55960;
-	    this.dsHost = 'localhost';
-	    this.dsSocket = null;
 
 	    if (argv.indexOf("-e") != -1) {
 	      this.env = argv[argv.indexOf("-e") + 1];
@@ -143,24 +131,10 @@
 	      this.port = argv[argv.indexOf("-p") + 1];
 	    }
 
-	    if (argv.indexOf("-lh") != -1) {
-	      this.loginHost = argv[argv.indexOf("-lh") + 1];
-	    }
-	    if (argv.indexOf("-lp") != -1) {
-	      this.loginPort = argv[argv.indexOf("-lp") + 1];
-	    }
-
-	    if (argv.indexOf("-dh") != -1) {
-	      this.dsHost = argv[argv.indexOf("-dh") + 1];
-	    }
-	    if (argv.indexOf("-dp") != -1) {
-	      this.dsPort = argv[argv.indexOf("-dp") + 1];
-	    }
-
-	    this.logger = _factory2.default.get('bunyan', { name: 'GameServer', level: 'info' });
+	    this.logger = _factory2.default.get('bunyan', { name: 'LoginServer', level: 'info' });
 	  }
 
-	  _createClass(GameServer, [{
+	  _createClass(LoginServer, [{
 	    key: 'loadExtensions',
 	    value: function loadExtensions() {
 	      var _this = this;
@@ -174,59 +148,31 @@
 	      });
 	    }
 	  }, {
-	    key: 'connectLoginServer',
-	    value: function connectLoginServer() {
-	      var _this2 = this;
-
-	      var lsTimer = null;
-	      var options = {
-	        transports: ['websocket'],
-	        timeout: 1000
-	      };
-
-	      this.lsSocket = _socket4.default.connect('http://' + this.loginHost + ':' + this.loginPort, options);
-
-	      this.logger.info('Attempting to connect to LS: ' + this.loginHost + ':' + this.loginPort);
-
-	      lsTimer = setInterval(function () {
-	        if (_this2.lsSocket.connected) {
-	          clearInterval(lsTimer);
-	          return;
-	        }
-	        if (!_this2.lsSocket.connected) {
-	          _this2.logger.info('Unable to connect to LS: ' + _this2.loginHost + ':' + _this2.loginPort);
-	          return;
-	        }
-	      }, 2000);
-	    }
-	  }, {
 	    key: 'main',
 	    value: function main() {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      this.app.set('port', this.port);
 	      this.io = _socket2.default.listen(this.server);
 
 	      this.loadExtensions();
-	      this.connectLoginServer();
 
 	      this.server.listen(this.app.get('port'), function () {
-	        _this3.logger.info('GameServer listening on port ' + _this3.app.get('port') + ' in ' + _this3.env + ' mode');
+	        _this2.logger.info('LoginServer listening on port ' + _this2.app.get('port') + ' in ' + _this2.env + ' mode');
 	      });
 	    }
 	  }, {
 	    key: 'close',
 	    value: function close() {
-	      this.lsSocket.disconnect(true);
 	      this.io.close();
 	      this.server.close();
 	    }
 	  }]);
 
-	  return GameServer;
+	  return LoginServer;
 	}();
 
-	exports.default = GameServer;
+	exports.default = LoginServer;
 	;
 	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
@@ -387,9 +333,23 @@
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = require("socket.io-client");
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _socket = __webpack_require__(10);
+
+	var _socket2 = _interopRequireDefault(_socket);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = {
+	  socket: _socket2.default
+	};
 
 /***/ }),
 /* 10 */
@@ -401,24 +361,41 @@
 	  value: true
 	});
 
-	var _api = __webpack_require__(11);
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-	var _api2 = _interopRequireDefault(_api);
+	var _channels = __webpack_require__(11);
 
-	var _socket = __webpack_require__(12);
-
-	var _socket2 = _interopRequireDefault(_socket);
+	var _channels2 = _interopRequireDefault(_channels);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = {
-	  api: _api2.default,
-	  socket: _socket2.default
+	exports.default = function (server) {
+
+	  server.io.on('connection', function (socket) {
+
+	    server.logger.info('Socket Connected: ' + socket.id);
+	    server.gameservers[socket.id] = socket;
+
+	    Object.entries(_channels2.default).forEach(function (_ref) {
+	      var _ref2 = _slicedToArray(_ref, 2),
+	          name = _ref2[0],
+	          fn = _ref2[1];
+
+	      fn(server, socket.id);
+	    });
+
+	    socket.on('disconnect', function () {
+	      server.logger.info('GameServer Disconnected: ' + socket.id);
+	      delete server.gameservers[socket.id];
+	    });
+	  });
+
+	  server.logger.info("Loaded Socket extension.");
 	};
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -426,18 +403,14 @@
 	  value: true
 	});
 
-	exports.default = function (server) {
+	var _authentication = __webpack_require__(12);
 
-	  server.app.get('/', function (req, res) {
-	    res.set('Content-Type', 'application/json');
-	    res.setHeader("Access-Control-Allow-Origin", "*");
-	    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	    res.send(JSON.stringify({
-	      connections: 10
-	    }));
-	  });
+	var _authentication2 = _interopRequireDefault(_authentication);
 
-	  server.logger.info("Loaded API extension.");
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = {
+	  authentication: _authentication2.default
 	};
 
 /***/ }),
@@ -450,111 +423,41 @@
 	  value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-	var _channels = __webpack_require__(13);
-
-	var _channels2 = _interopRequireDefault(_channels);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function (server) {
-	  server.io.on('connection', function (socket) {
-	    server.logger.info('User Connected: ' + socket.id);
-	    server.sessions[socket.id] = socket;
-
-	    socket.on('disconnect', function () {
-	      server.logger.info('User Disconnected: ' + socket.id);
-	      delete server.sessions[socket.id];
-	    });
-
-	    Object.entries(_channels2.default).forEach(function (_ref) {
-	      var _ref2 = _slicedToArray(_ref, 2),
-	          name = _ref2[0],
-	          fn = _ref2[1];
-
-	      fn(server, socket.id);
-	    });
-	  });
-
-	  server.logger.info("Loaded Socket extension.");
-	};
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _clientVerification = __webpack_require__(14);
-
-	var _clientVerification2 = _interopRequireDefault(_clientVerification);
-
-	var _userAuthentication = __webpack_require__(17);
-
-	var _userAuthentication2 = _interopRequireDefault(_userAuthentication);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = {
-	  clientVerification: _clientVerification2.default,
-	  userAuthentication: _userAuthentication2.default
-	};
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _constants = __webpack_require__(15);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	var _events = __webpack_require__(16);
+	var _events = __webpack_require__(13);
 
 	var _events2 = _interopRequireDefault(_events);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var AUTH_FAILED_MSG = 'Invalid Credentials Provided';
+
 	exports.default = function (server, socketID) {
-	  var socket = server.sessions[socketID];
+	  var socket = server.gameservers[socketID];
 
-	  socket.on(_events2.default.CLIENT.CLIENT_VERSION.CLIENT_VERIFICATION, function (data) {
-	    var s = false;
+	  socket.on(_events2.default.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, function (data) {
 
-	    if (_constants2.default.CLIENT_VERSION === data.version) {
-	      s = true;
+	    if (data.username != 'test' && data.password != 'test') {
+
+	      server.logger.info('Authentication failed for user: ' + data.username);
+	      socket.emit(_events2.default.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, {
+	        success: false,
+	        status: AUTH_FAILED_MSG
+	      });
+	    } else {
+
+	      server.logger.info('Authentication successful for user: ' + data.username);
+	      socket.emit(_events2.default.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, {
+	        success: true,
+	        user: {
+	          characterName: 'Administrator'
+	        }
+	      });
 	    }
-
-	    socket.emit(_events2.default.SERVER.CLIENT_VERSION.CLIENT_VERIFICATION, { status: s });
 	  });
 	};
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = {
-	  CLIENT_VERSION: '0.0.1',
-	  SERVER_VERSION: '0.0.1'
-	};
-
-/***/ }),
-/* 16 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	module.exports = {
@@ -582,40 +485,6 @@
 	      CLIENT_VERIFICATION: 'client_verification'
 	    }
 	  }
-	};
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _events = __webpack_require__(16);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function (server, socketID) {
-	  var socket = server.sessions[socketID];
-
-	  //
-	  // emit the request to the login server
-	  //
-	  socket.on(_events2.default.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, function (data) {
-	    server.lsSocket.emit(_events2.default.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, data);
-	  });
-
-	  //
-	  // get the response from the login server and emit to the client
-	  //
-	  server.lsSocket.on(_events2.default.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, function (data) {
-	    socket.emit(_events2.default.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, data);
-	  });
 	};
 
 /***/ })

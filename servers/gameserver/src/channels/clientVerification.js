@@ -1,15 +1,16 @@
 import Constants from '../constants';
+import Events from '../../../../shared/events';
 
 export default (server, socketID) => {
   let socket = server.sessions[socketID];
 
-  socket.on('client_verification', (data) => {
+  socket.on(Events.CLIENT.CLIENT_VERSION.CLIENT_VERIFICATION, (data) => {
     let s = false;
 
     if (Constants.CLIENT_VERSION === data.version) {
       s = true;
     }
 
-    socket.emit('client_verification_status', { status: s });
+    socket.emit(Events.SERVER.CLIENT_VERSION.CLIENT_VERIFICATION, { status: s });
   });
 };
