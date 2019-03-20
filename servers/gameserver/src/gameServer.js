@@ -13,12 +13,15 @@ export default class GameServer {
     this.app      = express();
     this.conn     = null;
     this.root     = __dirname;
-    this.port     = 9090;
+    this.port     = 54500;
     this.server   = http.createServer(this.app);
+
     this.sessions = {};
+    this.maps = {};
+
     this.express  = express;
 
-    this.loginPort    = 4500;
+    this.loginPort    = 44500;
     this.loginHost    = 'localhost';
     this.lsSocket     = null;
 

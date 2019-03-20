@@ -12,7 +12,7 @@ export default class LoginServer {
     this.app      = express();
     this.conn     = null;
     this.root     = __dirname;
-    this.port     = 4500;
+    this.port     = 44500;
     this.server   = http.createServer(this.app);
     this.gameservers = {};
     this.express  = express;

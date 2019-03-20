@@ -9,6 +9,10 @@ module.exports = {
 
     CLIENT_VERSION: {
       CLIENT_VERIFICATION: 'client_verification_status'
+    },
+
+    MAPS: {
+      REGISTER_MAP_CONNECTION: 'register_map_connection'
     }
   },
 

@@ -119,7 +119,7 @@
 	    this.app = (0, _express2.default)();
 	    this.conn = null;
 	    this.root = __dirname;
-	    this.port = 4500;
+	    this.port = 44500;
 	    this.server = _http2.default.createServer(this.app);
 	    this.gameservers = {};
 	    this.express = _express2.default;

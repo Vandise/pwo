@@ -53,21 +53,21 @@
 
 	'use strict';
 
-	var _gameServer = __webpack_require__(2);
+	var _mapServer = __webpack_require__(2);
 
-	var _gameServer2 = _interopRequireDefault(_gameServer);
+	var _mapServer2 = _interopRequireDefault(_mapServer);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	(function () {
-	  var GS = new _gameServer2.default(process.argv);
+	  var MS = new _mapServer2.default(process.argv);
 
-	  GS.main();
+	  MS.main();
 
 	  process.stdin.resume();
 
 	  process.on('SIGINT', function () {
-	    GS.close();
+	    MS.close();
 	    process.exit(2);
 	  });
 	})();
@@ -110,34 +110,39 @@
 
 	var _ext2 = _interopRequireDefault(_ext);
 
+	var _events = __webpack_require__(13);
+
+	var _events2 = _interopRequireDefault(_events);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var GameServer = function () {
-	  function GameServer(argv) {
-	    _classCallCheck(this, GameServer);
+	var MapServer = function () {
+	  function MapServer(argv) {
+	    _classCallCheck(this, MapServer);
 
 	    this.io = null;
 	    this.env = "dev";
 	    this.app = (0, _express2.default)();
 	    this.conn = null;
 	    this.root = __dirname;
-	    this.port = 54500;
+	    this.port = 52500;
 	    this.server = _http2.default.createServer(this.app);
+	    this.gsSocket = null;
 
-	    this.sessions = {};
-	    this.maps = {};
+	    // if a direct socket connect is ever needed
+	    // possibly debug purposes?
+	    this.connections = {};
 
 	    this.express = _express2.default;
 
-	    this.loginPort = 44500;
-	    this.loginHost = 'localhost';
-	    this.lsSocket = null;
+	    this.gameserverHost = 'localhost';
+	    this.gameserverPort = 54500;
+	    this.map = 'world_00.tmx';
 
-	    this.dsPort = 55960;
-	    this.dsHost = 'localhost';
-	    this.dsSocket = null;
+	    // the map data to be sent via socket
+	    this.mapData = null;
 
 	    if (argv.indexOf("-e") != -1) {
 	      this.env = argv[argv.indexOf("-e") + 1];
@@ -145,25 +150,20 @@
 	    if (argv.indexOf("-p") != -1) {
 	      this.port = argv[argv.indexOf("-p") + 1];
 	    }
-
-	    if (argv.indexOf("-lh") != -1) {
-	      this.loginHost = argv[argv.indexOf("-lh") + 1];
+	    if (argv.indexOf("-m") != -1) {
+	      this.map = argv[argv.indexOf("-m") + 1];
 	    }
-	    if (argv.indexOf("-lp") != -1) {
-	      this.loginPort = argv[argv.indexOf("-lp") + 1];
+	    if (argv.indexOf("-gh") != -1) {
+	      this.dsHost = argv[argv.indexOf("-gh") + 1];
 	    }
-
-	    if (argv.indexOf("-dh") != -1) {
-	      this.dsHost = argv[argv.indexOf("-dh") + 1];
-	    }
-	    if (argv.indexOf("-dp") != -1) {
-	      this.dsPort = argv[argv.indexOf("-dp") + 1];
+	    if (argv.indexOf("-gp") != -1) {
+	      this.dsPort = argv[argv.indexOf("-gp") + 1];
 	    }
 
-	    this.logger = _factory2.default.get('bunyan', { name: 'GameServer', level: 'info' });
+	    this.logger = _factory2.default.get('bunyan', { name: 'MapServer', level: 'info' });
 	  }
 
-	  _createClass(GameServer, [{
+	  _createClass(MapServer, [{
 	    key: 'loadExtensions',
 	    value: function loadExtensions() {
 	      var _this = this;
@@ -177,8 +177,8 @@
 	      });
 	    }
 	  }, {
-	    key: 'connectLoginServer',
-	    value: function connectLoginServer() {
+	    key: 'connectGameServer',
+	    value: function connectGameServer() {
 	      var _this2 = this;
 
 	      var lsTimer = null;
@@ -187,17 +187,27 @@
 	        timeout: 1000
 	      };
 
-	      this.lsSocket = _socket4.default.connect('http://' + this.loginHost + ':' + this.loginPort, options);
+	      this.gsSocket = _socket4.default.connect('http://' + this.gameserverHost + ':' + this.gameserverPort, options);
 
-	      this.logger.info('Attempting to connect to LS: ' + this.loginHost + ':' + this.loginPort);
+	      this.logger.info('Attempting to connect to GameServer: ' + this.gameserverHost + ':' + this.gameserverPort);
 
 	      lsTimer = setInterval(function () {
-	        if (_this2.lsSocket.connected) {
+	        if (_this2.gsSocket.connected) {
+
+	          //
+	          // register the map and socket to the server
+	          //
+	          _this2.gsSocket.emit(_events2.default.SERVER.MAPS.REGISTER_MAP_CONNECTION, {
+	            name: _this2.map.split('.')[0],
+	            socketID: _this2.gsSocket.id
+	          });
+
 	          clearInterval(lsTimer);
 	          return;
 	        }
-	        if (!_this2.lsSocket.connected) {
-	          _this2.logger.info('Unable to connect to LS: ' + _this2.loginHost + ':' + _this2.loginPort);
+
+	        if (!_this2.gsSocket.connected) {
+	          _this2.logger.info('Unable to connect to GS: ' + _this2.gameserverHost + ':' + _this2.gameserverPort);
 	          return;
 	        }
 	      }, 2000);
@@ -211,25 +221,24 @@
 	      this.io = _socket2.default.listen(this.server);
 
 	      this.loadExtensions();
-	      this.connectLoginServer();
+	      this.connectGameServer();
 
 	      this.server.listen(this.app.get('port'), function () {
-	        _this3.logger.info('GameServer listening on port ' + _this3.app.get('port') + ' in ' + _this3.env + ' mode');
+	        _this3.logger.info('MapServer listening on port ' + _this3.app.get('port') + ' in ' + _this3.env + ' mode');
 	      });
 	    }
 	  }, {
 	    key: 'close',
 	    value: function close() {
-	      this.lsSocket.disconnect(true);
 	      this.io.close();
 	      this.server.close();
 	    }
 	  }]);
 
-	  return GameServer;
+	  return MapServer;
 	}();
 
-	exports.default = GameServer;
+	exports.default = MapServer;
 	;
 	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
@@ -404,13 +413,13 @@
 	  value: true
 	});
 
-	var _api = __webpack_require__(11);
-
-	var _api2 = _interopRequireDefault(_api);
-
-	var _socket = __webpack_require__(12);
+	var _socket = __webpack_require__(11);
 
 	var _socket2 = _interopRequireDefault(_socket);
+
+	var _api = __webpack_require__(12);
+
+	var _api2 = _interopRequireDefault(_api);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -431,52 +440,14 @@
 
 	exports.default = function (server) {
 
-	  server.app.get('/', function (req, res) {
-	    res.set('Content-Type', 'application/json');
-	    res.setHeader("Access-Control-Allow-Origin", "*");
-	    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	    res.send(JSON.stringify({
-	      connections: 10
-	    }));
-	  });
-
-	  server.logger.info("Loaded API extension.");
-	};
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-	var _channels = __webpack_require__(13);
-
-	var _channels2 = _interopRequireDefault(_channels);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function (server) {
 	  server.io.on('connection', function (socket) {
-	    server.logger.info('User Connected: ' + socket.id);
-	    server.sessions[socket.id] = socket;
+
+	    server.logger.info('Socket Connected: ' + socket.id);
+	    server.connections[socket.id] = socket;
 
 	    socket.on('disconnect', function () {
-	      server.logger.info('User Disconnected: ' + socket.id);
-	      delete server.sessions[socket.id];
-	    });
-
-	    Object.entries(_channels2.default).forEach(function (_ref) {
-	      var _ref2 = _slicedToArray(_ref, 2),
-	          name = _ref2[0],
-	          fn = _ref2[1];
-
-	      fn(server, socket.id);
+	      server.logger.info('Socket Disconnected: ' + socket.id);
+	      delete server.connections[socket.id];
 	    });
 	  });
 
@@ -484,71 +455,7 @@
 	};
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _clientVerification = __webpack_require__(14);
-
-	var _clientVerification2 = _interopRequireDefault(_clientVerification);
-
-	var _userAuthentication = __webpack_require__(17);
-
-	var _userAuthentication2 = _interopRequireDefault(_userAuthentication);
-
-	var _map = __webpack_require__(18);
-
-	var _map2 = _interopRequireDefault(_map);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = {
-	  clientVerification: _clientVerification2.default,
-	  map: _map2.default,
-	  userAuthentication: _userAuthentication2.default
-	};
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _constants = __webpack_require__(15);
-
-	var _constants2 = _interopRequireDefault(_constants);
-
-	var _events = __webpack_require__(16);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function (server, socketID) {
-	  var socket = server.sessions[socketID];
-
-	  socket.on(_events2.default.CLIENT.CLIENT_VERSION.CLIENT_VERIFICATION, function (data) {
-	    var s = false;
-
-	    if (_constants2.default.CLIENT_VERSION === data.version) {
-	      s = true;
-	    }
-
-	    socket.emit(_events2.default.SERVER.CLIENT_VERSION.CLIENT_VERIFICATION, { status: s });
-	  });
-	};
-
-/***/ }),
-/* 15 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -556,13 +463,23 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = {
-	  CLIENT_VERSION: '0.0.1',
-	  SERVER_VERSION: '0.0.1'
+
+	exports.default = function (server) {
+
+	  server.app.get('/', function (req, res) {
+	    res.set('Content-Type', 'application/json');
+	    res.setHeader("Access-Control-Allow-Origin", "*");
+	    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	    res.send(JSON.stringify({
+	      mapsever: server.map
+	    }));
+	  });
+
+	  server.logger.info("Loaded API extension.");
 	};
 
 /***/ }),
-/* 16 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	module.exports = {
@@ -594,65 +511,6 @@
 	      CLIENT_VERIFICATION: 'client_verification'
 	    }
 	  }
-	};
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _events = __webpack_require__(16);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function (server, socketID) {
-	  var socket = server.sessions[socketID];
-
-	  //
-	  // emit the request to the login server
-	  //
-	  socket.on(_events2.default.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, function (data) {
-	    server.lsSocket.emit(_events2.default.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, data);
-	  });
-
-	  //
-	  // get the response from the login server and emit to the client
-	  //
-	  server.lsSocket.on(_events2.default.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, function (data) {
-	    socket.emit(_events2.default.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, data);
-	  });
-	};
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _events = __webpack_require__(16);
-
-	var _events2 = _interopRequireDefault(_events);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function (server, socketID) {
-	  var socket = server.sessions[socketID];
-
-	  socket.on(_events2.default.SERVER.MAPS.REGISTER_MAP_CONNECTION, function (data) {
-	    server.logger.info('Registered Map Connection: ' + data.name);
-	    server.maps[data.name] = data.socketID;
-	  });
 	};
 
 /***/ })
