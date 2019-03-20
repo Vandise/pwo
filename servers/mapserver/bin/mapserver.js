@@ -110,7 +110,7 @@
 
 	var _ext2 = _interopRequireDefault(_ext);
 
-	var _events = __webpack_require__(13);
+	var _events = __webpack_require__(14);
 
 	var _events2 = _interopRequireDefault(_events);
 
@@ -184,10 +184,11 @@
 	      var lsTimer = null;
 	      var options = {
 	        transports: ['websocket'],
-	        timeout: 1000
+	        timeout: 1000,
+	        namespace: '/mapserver'
 	      };
 
-	      this.gsSocket = _socket4.default.connect('http://' + this.gameserverHost + ':' + this.gameserverPort, options);
+	      this.gsSocket = _socket4.default.connect('http://' + this.gameserverHost + ':' + this.gameserverPort + '/mapserver', options);
 
 	      this.logger.info('Attempting to connect to GameServer: ' + this.gameserverHost + ':' + this.gameserverPort);
 
@@ -198,9 +199,10 @@
 	          // register the map and socket to the server
 	          //
 	          _this2.gsSocket.emit(_events2.default.SERVER.MAPS.REGISTER_MAP_CONNECTION, {
-	            name: _this2.map.split('.')[0],
-	            socketID: _this2.gsSocket.id
+	            name: _this2.map.split('.')[0]
 	          });
+
+	          _this2.loadExtensions();
 
 	          clearInterval(lsTimer);
 	          return;
@@ -220,7 +222,6 @@
 	      this.app.set('port', this.port);
 	      this.io = _socket2.default.listen(this.server);
 
-	      this.loadExtensions();
 	      this.connectGameServer();
 
 	      this.server.listen(this.app.get('port'), function () {
@@ -421,11 +422,16 @@
 
 	var _api2 = _interopRequireDefault(_api);
 
+	var _gameserver = __webpack_require__(13);
+
+	var _gameserver2 = _interopRequireDefault(_gameserver);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = {
 	  api: _api2.default,
-	  socket: _socket2.default
+	  socket: _socket2.default,
+	  gameserver: _gameserver2.default
 	};
 
 /***/ }),
@@ -480,6 +486,35 @@
 
 /***/ }),
 /* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _events = __webpack_require__(14);
+
+	var _events2 = _interopRequireDefault(_events);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (server) {
+	  var socket = server.gsSocket;
+
+	  socket.on(_events2.default.SERVER.MAPS.GET_MAP_SERVER_DATA, function (data) {
+	    socket.emit(_events2.default.SERVER.MAPS.GET_MAP_SERVER_DATA, {
+	      name: data.name,
+	      file: server.map,
+	      data: 'xml here',
+	      originID: data.originID
+	    });
+	  });
+	};
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports) {
 
 	module.exports = {
@@ -496,7 +531,9 @@
 	    },
 
 	    MAPS: {
-	      REGISTER_MAP_CONNECTION: 'register_map_connection'
+	      REGISTER_MAP_CONNECTION: 'register_map_connection',
+	      GET_MAP_SERVER_DATA: 'get_map_server_data',
+	      GET_MAP_DATA: 'get_map_data'
 	    }
 	  },
 
@@ -509,6 +546,10 @@
 
 	    CLIENT_VERSION: {
 	      CLIENT_VERIFICATION: 'client_verification'
+	    },
+
+	    MAPS: {
+	      GET_MAP_DATA: 'get_map_data'
 	    }
 	  }
 	};

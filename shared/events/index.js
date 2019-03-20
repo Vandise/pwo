@@ -12,7 +12,9 @@ module.exports = {
     },
 
     MAPS: {
-      REGISTER_MAP_CONNECTION: 'register_map_connection'
+      REGISTER_MAP_CONNECTION: 'register_map_connection',
+      GET_MAP_SERVER_DATA: 'get_map_server_data',
+      GET_MAP_DATA: 'get_map_data'
     }
   },
 
@@ -25,6 +27,10 @@ module.exports = {
 
     CLIENT_VERSION: {
       CLIENT_VERIFICATION: 'client_verification'
+    },
+
+    MAPS: {
+      GET_MAP_DATA: 'get_map_data'
     }
   }
 };

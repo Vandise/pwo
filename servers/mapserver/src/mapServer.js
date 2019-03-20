@@ -50,10 +50,11 @@ export default class MapServer {
     let lsTimer   = null;
     const options = {
       transports: ['websocket'],
-      timeout: 1000
+      timeout: 1000,
+      namespace: '/mapserver'
     };
 
-    this.gsSocket = ioClient.connect(`http://${this.gameserverHost}:${this.gameserverPort}`, options);
+    this.gsSocket = ioClient.connect(`http://${this.gameserverHost}:${this.gameserverPort}/mapserver`, options);
 
     this.logger.info(`Attempting to connect to GameServer: ${this.gameserverHost}:${this.gameserverPort}`);
 
@@ -64,9 +65,10 @@ export default class MapServer {
         // register the map and socket to the server
         //
         this.gsSocket.emit(Events.SERVER.MAPS.REGISTER_MAP_CONNECTION, {
-          name: this.map.split('.')[0],
-          socketID: this.gsSocket.id
+          name: this.map.split('.')[0]
         });
+
+        this.loadExtensions();
 
         clearInterval(lsTimer);
         return;
@@ -84,7 +86,6 @@ export default class MapServer {
     this.app.set('port', this.port);
     this.io = socketio.listen(this.server);
 
-    this.loadExtensions();
     this.connectGameServer();
 
     this.server.listen(this.app.get('port'), () => {

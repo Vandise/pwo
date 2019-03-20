@@ -459,10 +459,15 @@
 
 	var _channels2 = _interopRequireDefault(_channels);
 
+	var _mapServer = __webpack_require__(19);
+
+	var _mapServer2 = _interopRequireDefault(_mapServer);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = function (server) {
-	  server.io.on('connection', function (socket) {
+
+	  server.io.of('/').on('connection', function (socket) {
 	    server.logger.info('User Connected: ' + socket.id);
 	    server.sessions[socket.id] = socket;
 
@@ -477,6 +482,32 @@
 	          fn = _ref2[1];
 
 	      fn(server, socket.id);
+	    });
+	  });
+
+	  server.io.of('/mapserver').on('connection', function (socket) {
+
+	    server.logger.info('MapServer Connected: ' + socket.id);
+
+	    server.sessions[socket.id] = socket;
+
+	    (0, _mapServer2.default)(server, socket);
+
+	    socket.on('disconnect', function () {
+	      server.logger.info('MapServer Disconnected: ' + socket.id);
+	      delete server.sessions[socket.id];
+
+	      Object.entries(server.maps).some(function (_ref3) {
+	        var _ref4 = _slicedToArray(_ref3, 2),
+	            name = _ref4[0],
+	            id = _ref4[1];
+
+	        if (id == socket.id) {
+	          delete server.maps[name];
+	          return true;
+	        }
+	        return false;
+	      });
 	    });
 	  });
 
@@ -501,15 +532,15 @@
 
 	var _userAuthentication2 = _interopRequireDefault(_userAuthentication);
 
-	var _map = __webpack_require__(18);
+	var _maps = __webpack_require__(18);
 
-	var _map2 = _interopRequireDefault(_map);
+	var _maps2 = _interopRequireDefault(_maps);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = {
 	  clientVerification: _clientVerification2.default,
-	  map: _map2.default,
+	  maps: _maps2.default,
 	  userAuthentication: _userAuthentication2.default
 	};
 
@@ -579,7 +610,9 @@
 	    },
 
 	    MAPS: {
-	      REGISTER_MAP_CONNECTION: 'register_map_connection'
+	      REGISTER_MAP_CONNECTION: 'register_map_connection',
+	      GET_MAP_SERVER_DATA: 'get_map_server_data',
+	      GET_MAP_DATA: 'get_map_data'
 	    }
 	  },
 
@@ -592,6 +625,10 @@
 
 	    CLIENT_VERSION: {
 	      CLIENT_VERIFICATION: 'client_verification'
+	    },
+
+	    MAPS: {
+	      GET_MAP_DATA: 'get_map_data'
 	    }
 	  }
 	};
@@ -649,9 +686,64 @@
 	exports.default = function (server, socketID) {
 	  var socket = server.sessions[socketID];
 
+	  //
+	  // client request to get map data string
+	  //
+	  socket.on(_events2.default.CLIENT.MAPS.GET_MAP_DATA, function (data) {
+
+	    var connID = server.maps[data.name];
+
+	    // find map server socket
+	    if (connID) {
+	      var conn = server.sessions[connID];
+
+	      // send the origin socket id
+	      data['originID'] = socketID;
+
+	      // emit to the map server the data request
+	      conn.emit(_events2.default.SERVER.MAPS.GET_MAP_SERVER_DATA, data);
+	    } else {
+
+	      // invalid map name specified / requested / map unavailable
+	      socket.emit(_events2.default.SERVER.MAPS.GET_MAP_DATA, {
+	        valid: false
+	      });
+	    }
+	  });
+	};
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _events = __webpack_require__(16);
+
+	var _events2 = _interopRequireDefault(_events);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (server, socket) {
+
 	  socket.on(_events2.default.SERVER.MAPS.REGISTER_MAP_CONNECTION, function (data) {
 	    server.logger.info('Registered Map Connection: ' + data.name);
-	    server.maps[data.name] = data.socketID;
+	    server.maps[data.name] = socket.id;
+	  });
+
+	  socket.on(_events2.default.SERVER.MAPS.GET_MAP_SERVER_DATA, function (data) {
+	    var originSocket = server.sessions[data['originID']];
+
+	    // send the response to the proper client
+	    if (originSocket) {
+	      originSocket.emit(_events2.default.SERVER.MAPS.GET_MAP_DATA, {
+	        valid: true
+	      });
+	    }
 	  });
 	};
 

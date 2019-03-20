@@ -471,6 +471,12 @@
 
 	    CLIENT_VERSION: {
 	      CLIENT_VERIFICATION: 'client_verification_status'
+	    },
+
+	    MAPS: {
+	      REGISTER_MAP_CONNECTION: 'register_map_connection',
+	      GET_MAP_SERVER_DATA: 'get_map_server_data',
+	      GET_MAP_DATA: 'get_map_data'
 	    }
 	  },
 
@@ -483,6 +489,10 @@
 
 	    CLIENT_VERSION: {
 	      CLIENT_VERIFICATION: 'client_verification'
+	    },
+
+	    MAPS: {
+	      GET_MAP_DATA: 'get_map_data'
 	    }
 	  }
 	};

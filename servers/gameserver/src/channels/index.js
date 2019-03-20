@@ -1,9 +1,9 @@
 import clientVerification from './clientVerification';
 import userAuthentication from './userAuthentication';
-import map from './map';
+import maps from './maps';
 
 export default {
   clientVerification,
-  map,
+  maps,
   userAuthentication,
 };
