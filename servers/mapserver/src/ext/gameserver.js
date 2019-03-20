@@ -7,7 +7,7 @@ export default (server) => {
     socket.emit(Events.SERVER.MAPS.GET_MAP_SERVER_DATA, {
       name: data.name,
       file: server.map,
-      data: 'xml here',
+      data: server.mapData,
       originID: data.originID,
     });
   });

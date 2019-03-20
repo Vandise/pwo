@@ -3,6 +3,7 @@ import express       from 'express';
 import http          from 'http';
 import socketio      from 'socket.io';
 import ioClient      from 'socket.io-client';
+import fs            from 'fs';
 import extensions    from './ext';
 import Events from '../../../shared/events';
 
@@ -82,7 +83,22 @@ export default class MapServer {
     }, 2000);
   }
 
+  cacheMap() {
+    const name = `/Volumes/Macintosh HD/Users/benanderson/local/pokemon-world-online/shared/maps/${this.map}`;
+
+    fs.readFile(name, 'utf8', (err, data) => {
+      if (err) {
+        throw err;
+      }
+      this.mapData = data;
+    });
+
+  }
+
   main() {
+
+    this.cacheMap();
+
     this.app.set('port', this.port);
     this.io = socketio.listen(this.server);
 

@@ -740,9 +740,9 @@
 
 	    // send the response to the proper client
 	    if (originSocket) {
-	      originSocket.emit(_events2.default.SERVER.MAPS.GET_MAP_DATA, {
+	      originSocket.emit(_events2.default.SERVER.MAPS.GET_MAP_DATA, Object.assign(data, {
 	        valid: true
-	      });
+	      }));
 	    }
 	  });
 	};

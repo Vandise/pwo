@@ -106,11 +106,15 @@
 
 	var _socket4 = _interopRequireDefault(_socket3);
 
-	var _ext = __webpack_require__(10);
+	var _fs = __webpack_require__(10);
+
+	var _fs2 = _interopRequireDefault(_fs);
+
+	var _ext = __webpack_require__(11);
 
 	var _ext2 = _interopRequireDefault(_ext);
 
-	var _events = __webpack_require__(14);
+	var _events = __webpack_require__(15);
 
 	var _events2 = _interopRequireDefault(_events);
 
@@ -215,9 +219,25 @@
 	      }, 2000);
 	    }
 	  }, {
+	    key: 'cacheMap',
+	    value: function cacheMap() {
+	      var _this3 = this;
+
+	      var name = '/Volumes/Macintosh HD/Users/benanderson/local/pokemon-world-online/shared/maps/' + this.map;
+
+	      _fs2.default.readFile(name, 'utf8', function (err, data) {
+	        if (err) {
+	          throw err;
+	        }
+	        _this3.mapData = data;
+	      });
+	    }
+	  }, {
 	    key: 'main',
 	    value: function main() {
-	      var _this3 = this;
+	      var _this4 = this;
+
+	      this.cacheMap();
 
 	      this.app.set('port', this.port);
 	      this.io = _socket2.default.listen(this.server);
@@ -225,7 +245,7 @@
 	      this.connectGameServer();
 
 	      this.server.listen(this.app.get('port'), function () {
-	        _this3.logger.info('MapServer listening on port ' + _this3.app.get('port') + ' in ' + _this3.env + ' mode');
+	        _this4.logger.info('MapServer listening on port ' + _this4.app.get('port') + ' in ' + _this4.env + ' mode');
 	      });
 	    }
 	  }, {
@@ -406,6 +426,12 @@
 
 /***/ }),
 /* 10 */
+/***/ (function(module, exports) {
+
+	module.exports = require("fs");
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -414,15 +440,15 @@
 	  value: true
 	});
 
-	var _socket = __webpack_require__(11);
+	var _socket = __webpack_require__(12);
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _api = __webpack_require__(12);
+	var _api = __webpack_require__(13);
 
 	var _api2 = _interopRequireDefault(_api);
 
-	var _gameserver = __webpack_require__(13);
+	var _gameserver = __webpack_require__(14);
 
 	var _gameserver2 = _interopRequireDefault(_gameserver);
 
@@ -435,7 +461,7 @@
 	};
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -461,7 +487,7 @@
 	};
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -485,7 +511,7 @@
 	};
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -494,7 +520,7 @@
 	  value: true
 	});
 
-	var _events = __webpack_require__(14);
+	var _events = __webpack_require__(15);
 
 	var _events2 = _interopRequireDefault(_events);
 
@@ -507,14 +533,14 @@
 	    socket.emit(_events2.default.SERVER.MAPS.GET_MAP_SERVER_DATA, {
 	      name: data.name,
 	      file: server.map,
-	      data: 'xml here',
+	      data: server.mapData,
 	      originID: data.originID
 	    });
 	  });
 	};
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	module.exports = {
