@@ -16,7 +16,7 @@ class BootScreen extends dom.globals.me.Stage {
         25,
         0,
         me.video.renderer.getWidth() - 50,
-        16
+        25
     );
 
     this.loaderHdlr = me.event.subscribe(
@@ -34,6 +34,8 @@ class BootScreen extends dom.globals.me.Stage {
 
   onDestroyEvent() {
     const { me } = dom.globals;
+
+    me.game.world.removeChild(this.progressBar.text);
 
     me.event.unsubscribe(this.loaderHdlr);
     me.event.unsubscribe(this.resizeHdlr);

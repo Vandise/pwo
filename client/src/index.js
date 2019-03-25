@@ -1,6 +1,7 @@
 import Game from './game/';
 import BootScreen from './game/screens/loading/boot';
 import * as dom from './util/dom';
+import redux from './redux/';
 
 class Bootstrap {
 
@@ -8,35 +9,25 @@ class Bootstrap {
 
     const { me } = dom.globals;
 
-    // Initialize the video.
-    if (!me.video.init(600, 400, { wrapper: "screen", scale: 1.5, scaleMethod: "fill-max" })) {
-      alert("Your browser does not support HTML5 canvas.");
-      return;
-    } else {
-      const canvas = document.getElementsByTagName("canvas")[0];
-      const ctx = canvas.getContext("2d");
+    window.store = redux.store;
 
-      const bg = new Image();
-      bg.src = '/img/boot_bg.jpg';
-      bg.onload = () => {
-        ctx.drawImage(bg, 0, 0, 900, 600);
-      };
-    }
-
-    // add "#debug" to the URL to enable the debug Panel
-    if (document.location.hash === "#debug") {
-      window.onReady(() => {
-        me.utils.function.defer(me.plugin.register, this, me.debug.Panel, "debug");
-      });
-    }
+    this.initVideoBootScreen();
+    this.debug();
 
     // Initialize the audio.
     me.audio.init("mp3,ogg");
+    me.sys.gravity = 0;
 
     // Set a callback to run when loading is complete.
     me.loader.onload = this.loaded.bind(this);
 
-    // Load the resources.
+    me.state.set(me.state.LOADING, new BootScreen());
+    me.state.change(me.state.LOADING);
+
+    redux.dispatch({ type: 'GS_CONNECT', payload: { host: 'localhost', port: 54500 } });
+  }
+
+  preloadAssets() {
     /*
     me.loader.preload(
       Game.resources.sprites
@@ -55,15 +46,35 @@ class Bootstrap {
     });
     */
 
-    me.state.set(me.state.LOADING, new BootScreen());
-
     me.loader.preload(
       Game.resources.sprites
     );
+  }
 
-    me.sys.gravity = 0;
+  debug() {
+    // add "#debug" to the URL to enable the debug Panel
+    if (document.location.hash === "#debug") {
+      window.onReady(() => {
+        me.utils.function.defer(me.plugin.register, this, me.debug.Panel, "debug");
+      });
+    }
+  }
 
-    me.state.change(me.state.LOADING);
+  initVideoBootScreen() {
+    // Initialize the video.
+    if (!me.video.init(600, 400, { wrapper: "screen", scale: 1.5, scaleMethod: "fill-max" })) {
+      alert("Your browser does not support HTML5 canvas.");
+      return;
+    } else {
+      const canvas = document.getElementsByTagName("canvas")[0];
+      const ctx = canvas.getContext("2d");
+
+      const bg = new Image();
+      bg.src = '/img/boot_bg.jpg';
+      bg.onload = () => {
+        ctx.drawImage(bg, 0, 0, 900, 600);
+      };
+    }
   }
 
   loaded() {
@@ -80,13 +91,14 @@ class Bootstrap {
     */
   }
 
-  static boot()
-  {
+  static boot() {
     const bootstrap = new Bootstrap();
     return bootstrap;
   }
 }
 
 window.onReady(() => {
-  Bootstrap.boot();
+  redux.dispatch(
+    redux.actions.SET_BOOTLOADER(Bootstrap.boot())
+  );
 });
