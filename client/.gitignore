@@ -1,0 +1,12 @@
+node_modules
+.*.swp
+*.log
+.swp
+.sw
+.nyc_output
+.DS_Store
+coverage
+public/
+dist/
+resources.json
+lib/ext
