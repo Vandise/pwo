@@ -10,6 +10,12 @@ describe('Login Form', () => {
     Form = require('Game/ui/forms/loginForm').default;
   });
 
+  describe('login action', () => {
+    it('dispatches a LOGIN_ATTEMPT action', () => {
+      // todo
+    });
+  });
+
   describe('form', () => {
 
     beforeEach(() => {
@@ -34,5 +40,19 @@ describe('Login Form', () => {
       ).to.have.lengthOf(1);
     });
 
+    describe('when the submit button is clicked', () => {
+
+      it('calls login', () => {
+        const spy = sinon.spy();
+        wrapper = mount(<Form />);
+
+        spyOnComponentMethod(wrapper, 'login', spy);
+
+        wrapper.find('a.button.login').simulate('click');
+
+        expect(spy).to.have.been.called;
+      });
+
+    });
   });
 });
