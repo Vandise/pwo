@@ -4,6 +4,7 @@ import * as Constants from 'Root/constants';
 import * as Dispatcher from 'Util/dispatcher';
 import * as dom from 'Util/dom';
 import { id } from 'Network/gameserver';
+import Game from 'Game/';
 
 export class Bootstrap {
 
@@ -29,7 +30,10 @@ export class Bootstrap {
   }
 
   preloadAssets() {
-
+    this.me.loader.preload(
+      Game.resources.sprites
+        .concat(Game.resources.tiles)
+    );
   }
 
   debug() {
@@ -76,8 +80,19 @@ export class Bootstrap {
   }
 
   static boot() {
+    require('Extensions/melon/loader');
+
     const bootstrap = new Bootstrap();
     bootstrap.init();
+
+    Dispatcher.dispatchAction(
+      redux.actions.melon.SET_BOOTLOADER(bootstrap)
+    );
+
+    Dispatcher.dispatchAction(
+      redux.actions.melon.SET_GAME(Game)
+    );
+
     return bootstrap;
   }
 }

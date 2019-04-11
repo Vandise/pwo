@@ -11,14 +11,13 @@ global.expect = chai.expect;
 global.td = require('testdouble');
 
 global.window = {
-  me: require('./me'),
   onReady: sinon.spy(),
 };
-
-global.me = require('./me');
 
 global.document = {
   location: {
     hash: ''
   }
 };
+
+global.me = require('./me');

@@ -81,4 +81,18 @@ describe('Melon Bootstrapper', () => {
     });
   });
 
+  describe('preloadAssets', () => {
+
+    beforeEach(() => {
+      bootstrapper = new Bootstrap();
+      bootstrapper.connectToGameServer = sinon.spy();
+      bootstrapper.drawBootSplash = sinon.spy();
+    });
+
+    it('preloads the game assets', () => {
+      bootstrapper.preloadAssets();
+      expect(dom.globals.me.loader.preload).to.have.been.called;
+    });
+
+  });
 });

@@ -9,6 +9,14 @@ export default handleActions({
     };
   },
 
+  SET_GAME: (state, action) => {
+    return {
+      ...state,
+      game: action.payload.game
+    };
+  },
+
 }, {
-  bootloader: null
+  bootloader: null,
+  game: null
 });

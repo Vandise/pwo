@@ -22,3 +22,8 @@ export function dispatch(type, payload, debug) {
   exports.pushLog(type, payload, debug);
   redux.dispatch({ type, payload });
 };
+
+export function dispatchAction(action, debug) {
+  exports.pushLog(action.type, action.payload, debug);
+  redux.dispatch(action);
+}
