@@ -1,6 +1,10 @@
+import * as Dispatcher from 'Util/dispatcher';
+
 const action = 'connect';
 const dispatch = (socket, store, next, action) => () => {
-  console.log('Connected')
+  Dispatcher.dispatchAction(
+    Dispatcher.actions.connection.SET_CONNECTION_STATUS(true)
+  );
 };
 
 export default {

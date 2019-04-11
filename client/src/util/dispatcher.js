@@ -1,8 +1,11 @@
 // utility for logging messages between sockets, user interactions, and redux -- similar to subscribe()
 import redux from 'Redux/'
+import reduxActions from 'Redux/actions';
 
 export const MAX_LOG = 50;
 export const MESSAGE_LOG = [];
+
+export const actions = reduxActions;
 
 export function pushLog(type, payload, msg) {
   MESSAGE_LOG.unshift({
@@ -20,10 +23,10 @@ export function pushLog(type, payload, msg) {
 
 export function dispatch(type, payload, debug) {
   exports.pushLog(type, payload, debug);
-  redux.dispatch({ type, payload });
+  redux.store.dispatch({ type, payload });
 };
 
 export function dispatchAction(action, debug) {
   exports.pushLog(action.type, action.payload, debug);
-  redux.dispatch(action);
+  redux.store.dispatch(action);
 }
