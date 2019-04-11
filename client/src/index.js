@@ -1,6 +1,9 @@
 import redux from 'Redux/';
 import BootScreen from 'Game/screens/loading/boot';
+import * as Constants from 'Root/constants';
+import * as Dispatcher from 'Util/dispatcher';
 import * as dom from 'Util/dom';
+import { id } from 'Network/gameserver';
 
 export class Bootstrap {
 
@@ -21,6 +24,8 @@ export class Bootstrap {
     this.me.loader.onload = this.loaded.bind(this);
 
     me.state.change(me.state.LOADING);
+
+    this.connectToGameServer();
   }
 
   preloadAssets() {
@@ -58,6 +63,12 @@ export class Bootstrap {
 
   registerStates() {
     this.me.state.set(me.state.LOADING, new BootScreen());
+  }
+
+  connectToGameServer() {
+    Dispatcher.dispatch(
+      `${id}_CONNECT`, { host: Constants.GS_HOST, port: Constants.GS_PORT }
+    );
   }
 
   loaded() {

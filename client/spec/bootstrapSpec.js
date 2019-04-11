@@ -4,11 +4,17 @@ import * as dom from 'Util/dom';
 describe('Melon Bootstrapper', () => {
 
   let bootstrapper;
+  let dispatcher;
 
   describe('On initialization', () => {
     beforeEach(() => {
       bootstrapper = new Bootstrap();
+      bootstrapper.connectToGameServer = sinon.spy();
       bootstrapper.init();
+    });
+
+    afterEach(() => {
+      td.reset();
     });
 
     it('initializes audio', () => {
@@ -35,6 +41,10 @@ describe('Melon Bootstrapper', () => {
     it('transitions to the LOADING state', () => {
       expect(dom.globals.me.state.change).to.have.been.calledWith(me.state.LOADING);
     });
+
+    it('connects to the game server', () => {
+      expect(bootstrapper.connectToGameServer).to.have.been.called;
+    });
   });
 
   describe('when initializing the video', () => {
@@ -43,6 +53,7 @@ describe('Melon Bootstrapper', () => {
       beforeEach(() => {
         dom.globals.me.video.init.returns(true);
         bootstrapper = new Bootstrap();
+        bootstrapper.connectToGameServer = sinon.spy();
         bootstrapper.drawBootSplash = sinon.spy();
         bootstrapper.init();
       });
@@ -58,6 +69,7 @@ describe('Melon Bootstrapper', () => {
       beforeEach(() => {
         dom.globals.me.video.init.returns(false);
         bootstrapper = new Bootstrap();
+        bootstrapper.connectToGameServer = sinon.spy();
         bootstrapper.drawBootSplash = sinon.spy();
         bootstrapper.init();
       });

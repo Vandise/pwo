@@ -8,6 +8,8 @@ chai.use(require('chai-immutable'));
 global.sinon = require('sinon');
 global.expect = chai.expect;
 
+global.td = require('testdouble');
+
 global.window = {
   me: require('./me'),
   onReady: sinon.spy(),
