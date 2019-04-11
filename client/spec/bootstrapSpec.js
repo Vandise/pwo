@@ -36,6 +36,7 @@ describe('Melon Bootstrapper', () => {
     it('registers the game states', () => {
       const set = dom.globals.me.state.set;
       expect(set).to.have.been.calledWith(me.state.LOADING);
+      expect(set).to.have.been.calledWith(me.state.LOGIN);
     });
 
     it('transitions to the LOADING state', () => {

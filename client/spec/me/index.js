@@ -8,5 +8,6 @@ module.exports = {
   game: require('./game'),
   event: require('./event'),
   Stage: require('./stage'),
-  state: require('./state')
+  state: require('./state'),
+  ColorLayer: require('./colorLayer')
 };
