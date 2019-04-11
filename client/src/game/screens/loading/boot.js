@@ -34,6 +34,7 @@ class BootScreen extends dom.globals.me.Stage {
     const { me } = dom.globals;
 
     me.game.world.removeChild(this.progressBar.text);
+    me.game.world.removeChild(this.progressBar);
 
     me.event.unsubscribe(this.loaderHdlr);
     me.event.unsubscribe(this.resizeHdlr);

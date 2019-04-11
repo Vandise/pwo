@@ -18,6 +18,11 @@ module.exports = function(x, y, w, h) {
     set: sinon.spy()
   };
 
+  this.resize = sinon.spy();
+
+  this.getWidth = function() { return this.width; };
+  this.getHeight = function() { return this.height; };
+
   this.getColor = sinon.stub();
   this.setColor = sinon.spy();
   this.fillRect = sinon.spy();

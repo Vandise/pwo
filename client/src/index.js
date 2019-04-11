@@ -1,4 +1,5 @@
 import redux from 'Redux/';
+import BootScreen from 'Game/screens/loading/boot';
 import * as dom from 'Util/dom';
 
 export class Bootstrap {
@@ -10,6 +11,7 @@ export class Bootstrap {
   }
 
   init() {
+    this.registerStates();
     this.initVideoBootScreen();
     this.debug();
 
@@ -17,6 +19,8 @@ export class Bootstrap {
     this.me.sys.gravity = 0;
 
     this.me.loader.onload = this.loaded.bind(this);
+
+    me.state.change(me.state.LOADING);
   }
 
   preloadAssets() {
@@ -50,6 +54,10 @@ export class Bootstrap {
     bg.onload = () => {
       ctx.drawImage(bg, 0, 0, 900, 600);
     };
+  }
+
+  registerStates() {
+    this.me.state.set(me.state.LOADING, new BootScreen());
   }
 
   loaded() {

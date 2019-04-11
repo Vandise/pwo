@@ -26,6 +26,15 @@ describe('Melon Bootstrapper', () => {
         bootstrapper.loaded.bind(bootstrapper).toString()
       );
     });
+
+    it('registers the game states', () => {
+      const set = dom.globals.me.state.set;
+      expect(set).to.have.been.calledWith(me.state.LOADING);
+    });
+
+    it('transitions to the LOADING state', () => {
+      expect(dom.globals.me.state.change).to.have.been.calledWith(me.state.LOADING);
+    });
   });
 
   describe('when initializing the video', () => {
