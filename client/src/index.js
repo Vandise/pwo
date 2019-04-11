@@ -82,6 +82,7 @@ export class Bootstrap {
   }
 
   static boot() {
+    require('Game/ui/');
     require('Extensions/melon/loader');
 
     const bootstrap = new Bootstrap();

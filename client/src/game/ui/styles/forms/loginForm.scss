@@ -1,0 +1,30 @@
+.login-form-container {
+  width:    380px;
+  height:   180px;
+  top:      25%;
+  left:     27%;
+  padding:  0.5em 2em 0.5em 2em;
+  position: relative;
+  background-color: white;
+
+  .input-container {
+    margin-top: 0.5em;
+  }
+
+  .label-text {
+    display: inline-block;
+    width:   100px;
+  }
+
+  .user-actions {
+    margin-top: 2em;
+    float:      right;
+
+    .button {
+      padding: 0.5em 1.5em;
+      background-color: black;
+      margin-right: 1.3em;
+      color: white;
+    }
+  }
+}

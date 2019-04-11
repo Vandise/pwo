@@ -1,5 +1,4 @@
-// utility for logging messages between sockets, user interactions, and redux -- similar to subscribe()
-import redux from 'Redux/'
+import redux from 'Redux/';
 import reduxActions from 'Redux/actions';
 
 export const MAX_LOG = 50;
