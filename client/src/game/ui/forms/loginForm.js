@@ -38,7 +38,7 @@ export default class LoginForm extends React.Component {
           </label>
         </div>
         <div className='user-actions'>
-          <a className='button red' onClick={this.login}>Ok</a>
+          <a className='button login red' onClick={this.login}>Ok</a>
         </div>
       </div>
     )
