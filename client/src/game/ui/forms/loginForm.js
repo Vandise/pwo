@@ -1,4 +1,7 @@
 import React from 'react';
+import Events from 'Events/';
+import { dispatch } from 'Util/dispatcher';
+
 import Styles from 'Game/ui/styles/forms/loginForm';
 
 export default class LoginForm extends React.Component {
@@ -8,15 +11,10 @@ export default class LoginForm extends React.Component {
     this.login = this.login.bind(this);
   }
 
-  login() {
-    const username = this.refs.account.value;
-    const password = this.refs.password.value;
-
-    console.log(username, password);
-
-    //redux.dispatch({ type: redux.events.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT,
-    //  payload: { username, password }
-    //});
+  login(username, password) {
+    dispatch(Events.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT,
+      { username, password }
+    );
   }
 
   render() {
@@ -38,7 +36,7 @@ export default class LoginForm extends React.Component {
           </label>
         </div>
         <div className='user-actions'>
-          <a className='button login red' onClick={this.login}>Ok</a>
+          <a className='button login red' onClick={() => this.login(this.refs.account.value, this.refs.password.value) }>Ok</a>
         </div>
       </div>
     )

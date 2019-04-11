@@ -4,15 +4,27 @@ import { shallow, mount } from 'enzyme';
 describe('Login Form', () => {
 
   let Form;
+  let dispatcher;
   let wrapper;
 
   beforeEach(() => {
+    dispatcher = require('Util/dispatcher');
+    td.replace(dispatcher, 'dispatch', sinon.spy());
+
     Form = require('Game/ui/forms/loginForm').default;
+  });
+
+  afterEach(() => {
+    td.reset();
   });
 
   describe('login action', () => {
     it('dispatches a LOGIN_ATTEMPT action', () => {
-      // todo
+      wrapper = shallow(<Form />);
+
+      wrapper.instance().login();
+
+      expect(dispatcher.dispatch).to.have.been.called;
     });
   });
 
