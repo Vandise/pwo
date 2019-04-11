@@ -96,4 +96,17 @@ describe('Melon Bootstrapper', () => {
     });
 
   });
+
+  describe('loaded', () => {
+    beforeEach(() => {
+      bootstrapper = new Bootstrap();
+      bootstrapper.connectToGameServer = sinon.spy();
+      bootstrapper.drawBootSplash = sinon.spy();
+    });
+
+    it('transitions to the LOGIN state', () => {
+      bootstrapper.loaded();
+      expect(dom.globals.me.state.change).to.have.been.calledWith(me.state.LOGIN);
+    });
+  });
 });

@@ -78,7 +78,7 @@ export class Bootstrap {
   }
 
   loaded() {
-    
+    me.state.change(me.state.LOGIN);
   }
 
   static boot() {
