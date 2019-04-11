@@ -1,0 +1,5 @@
+--colors
+--reporter landing
+--require spec/specHelper.js
+--webpack-config webpack.config.test.js
+spec/**/*Spec.{js,jsx}

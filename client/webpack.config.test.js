@@ -3,12 +3,10 @@ var path = require('path');
 var glob = require('glob');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-const WebpackShellPlugin = require('webpack-shell-plugin');
+var WebpackShellPlugin = require('webpack-shell-plugin');
+var nodeExternals = require('webpack-node-externals')
 
-var entries = [
-  "webpack-dev-server/client?http://0.0.0.0:8001",
-  'webpack/hot/only-dev-server'
-];
+var entries = [];
 
 glob.sync("./lib/ext/*/dist/*.js").forEach(function(ext) {
   console.log('Loading Extension: ', ext);
@@ -18,6 +16,8 @@ glob.sync("./lib/ext/*/dist/*.js").forEach(function(ext) {
 entries.push('./src/index.js');
 
 module.exports = {
+  target: 'node',
+  externals: [nodeExternals()],
   entry: entries,
   output: {
     path: path.join(__dirname, "public"),
@@ -28,18 +28,13 @@ module.exports = {
   },
   plugins: [
     new WebpackShellPlugin({
-      onBuildStart:['node scripts/generateResources.js']
+      onBuildStart:['node ' + path.resolve(__dirname, 'scripts/generateResources.js')]
     }),
-    new CopyWebpackPlugin([
-      { from: './resources/public/', to: path.join(__dirname, "public")},
-      { from: './resources/', to: path.join(__dirname, "public/resources")},
-    ]),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       }
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.IgnorePlugin(/vertx/)
   ],
@@ -58,13 +53,13 @@ module.exports = {
     }
   },
   module: {
-    loaders: [
-      { test: /\.jsx?$/,    loader: 'babel', include: path.join(__dirname, 'src'), exclude: '/node_modules/' },
+    preLoaders: [
+      { test: /\.jsx?$/,    loader: 'babel', include: path.join(__dirname, 'src') },
       { test: /\.scss$/,    loader: 'style!css!sass' },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
+    ],
+    loaders: [
+      { test: /\.jsx?$/, loader: 'babel', exclude: /node_modules/ }
     ]
-  },
-  node: {
-    fs: "empty"
   }
 };

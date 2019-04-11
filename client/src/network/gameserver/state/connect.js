@@ -1,6 +1,6 @@
 const action = 'connect';
 const dispatch = (socket, store, next, action) => () => {
-  store.getState().game.bootloader.preloadAssets();
+  console.log('Connected')
 };
 
 export default {

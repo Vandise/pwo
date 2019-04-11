@@ -1,10 +1,13 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { connectionReducer, gameReducer } from './reducers';
-import gameserverMiddleware from '../network/gameserver';
+import reducers from './reducers';
+
+import gameserverMiddleware from 'Network/gameserver';
 
 export const initialState = {};
 
-export const store = createStore(combineReducers({ conn: connectionReducer, game: gameReducer }), initialState,
+export const store = createStore(combineReducers(reducers), initialState,
   applyMiddleware(thunk, gameserverMiddleware)
 );
+
+export default store;

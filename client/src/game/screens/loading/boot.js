@@ -1,6 +1,6 @@
-import ProgressBar from '../../util/loading/bar';
-import MelonIcon from '../../util/loading/melonIcon';
-import * as dom from '../../../util/dom';
+import ProgressBar from 'Game/components/loading/bar';
+import MelonIcon from 'Game/components/loading/melonIcon';
+import * as dom from 'Util/dom';
 
 /*
   Primary Boot Screen to Login Menu
@@ -9,8 +9,6 @@ class BootScreen extends dom.globals.me.Stage {
 
   onResetEvent() {
     const { me } = dom.globals;
-
-    //me.game.world.addChild(new me.ColorLayer("background", "#202020", 0), 0);
 
     this.progressBar = new ProgressBar(
         25,

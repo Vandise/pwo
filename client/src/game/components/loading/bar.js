@@ -1,4 +1,4 @@
-import * as dom from '../../../util/dom';
+import * as dom from 'Util/dom';
 
 class ProgressBar extends dom.globals.me.Renderable {
 
@@ -18,7 +18,7 @@ class ProgressBar extends dom.globals.me.Renderable {
       fillStyle: 'white'
     });
 
-    me.game.world.addChild(this.text, 3)
+    dom.globals.me.game.world.addChild(this.text, 3)
   }
 
   onProgressUpdate(progress, file) {

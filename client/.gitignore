@@ -10,3 +10,5 @@ public/
 dist/
 resources.json
 lib/ext
+.tmp
+client_old
