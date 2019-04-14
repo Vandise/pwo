@@ -54,7 +54,6 @@ describe('GameServer Middleware', () => {
     });
 
     describe('LOGIN_ATTEMPT', () => {
-
       it('emits the LOGIN_ATTEMPT event', () => {
         const payload = {
           username: 'test',
@@ -63,7 +62,16 @@ describe('GameServer Middleware', () => {
         mockMiddleware(store)(() => true)({ type: events.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, payload });
         expect(mockSocket.emit).to.have.been.calledWith(events.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, payload);
       });
+    });
 
+    describe('GET_MAP_DATA', () => {
+      it('emits the GET_MAP_DATA event', () => {
+        const payload = {
+          name: 'test'
+        };
+        mockMiddleware(store)(() => true)({ type: events.CLIENT.MAPS.GET_MAP_DATA, payload });
+        expect(mockSocket.emit).to.have.been.calledWith(events.CLIENT.MAPS.GET_MAP_DATA, payload);
+      });
     });
 
   });
