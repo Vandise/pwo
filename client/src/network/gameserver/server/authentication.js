@@ -5,13 +5,14 @@ import Game from 'Game/';
 
 export const dispatch = (action, data, dispatch) => {
   if (data.success) {
-    Dispatcher.dispatchAction(
+    return Dispatcher.dispatchAction(
       Dispatcher.actions.user.SET_USER(data.user)
     ).then((d) => {
       Game.transitionGameState(Constants.STATES.LOAD_WORLD);
     });
-
   }
+
+  
 };
 
 export default {

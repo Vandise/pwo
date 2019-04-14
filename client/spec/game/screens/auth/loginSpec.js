@@ -34,4 +34,15 @@ describe('LoginScreen', () => {
       );
     });
   });
+
+  describe('onDestroyEvent', () => {
+
+    beforeEach(() => ls.onDestroyEvent());
+
+    it('removes the login form', () => {
+      expect(dispatcher.dispatchAction).to.have.been.calledWith(
+        dispatcher.actions.forms.TOGGLE_FORM('login', false)
+      );
+    });
+  });
 });
