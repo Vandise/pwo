@@ -1,5 +1,6 @@
 import { Bootstrap } from 'Root/index';
 import * as dom from 'Util/dom';
+import * as Constants from 'Root/constants';
 
 describe('Melon Bootstrapper', () => {
 
@@ -36,7 +37,7 @@ describe('Melon Bootstrapper', () => {
     it('registers the game states', () => {
       const set = dom.globals.me.state.set;
       expect(set).to.have.been.calledWith(me.state.LOADING);
-      expect(set).to.have.been.calledWith(me.state.LOGIN);
+      expect(set).to.have.been.calledWith(Constants.STATES.LOGIN);
     });
 
     it('transitions to the LOADING state', () => {
@@ -106,7 +107,7 @@ describe('Melon Bootstrapper', () => {
 
     it('transitions to the LOGIN state', () => {
       bootstrapper.loaded();
-      expect(dom.globals.me.state.change).to.have.been.calledWith(me.state.LOGIN);
+      expect(dom.globals.me.state.change).to.have.been.calledWith(Constants.STATES.LOGIN);
     });
   });
 });

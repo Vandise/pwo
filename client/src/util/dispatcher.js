@@ -22,10 +22,10 @@ export function pushLog(type, payload, msg) {
 
 export function dispatch(type, payload, debug) {
   exports.pushLog(type, payload, debug);
-  redux.store.dispatch({ type, payload });
+  return Promise.resolve(redux.store.dispatch({ type, payload }));
 };
 
 export function dispatchAction(action, debug) {
   exports.pushLog(action.type, action.payload, debug);
-  redux.store.dispatch(action);
+  return Promise.resolve(redux.store.dispatch(action));
 }

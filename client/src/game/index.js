@@ -1,5 +1,6 @@
 import resources from './resources';
 import redux from 'Redux/';
+import * as dom from 'Util/dom';
 
 class Game {
 
@@ -11,6 +12,10 @@ class Game {
     return redux.store.getState();
   }
 
+  transitionGameState(newState) {
+    const { me } = dom.globals;
+    me.state.change(newState);
+  }
 }
 
 const game = new Game();

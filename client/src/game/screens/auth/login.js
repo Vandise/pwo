@@ -14,7 +14,7 @@ class LoginScreen extends dom.globals.me.Stage {
   }
 
   onDestroyEvent() {
-
+    dispatchAction(actions.forms.TOGGLE_FORM('login', false));
   }
 
 };

@@ -1,6 +1,7 @@
 import redux from 'Redux/';
 import BootScreen from 'Game/screens/loading/boot';
 import LoginScreen from 'Game/screens/auth/login';
+import WorldLoadingScreen from 'Game/screens/loading/world';
 import * as Constants from 'Root/constants';
 import * as Dispatcher from 'Util/dispatcher';
 import * as dom from 'Util/dom';
@@ -25,7 +26,7 @@ export class Bootstrap {
 
     this.me.loader.onload = this.loaded.bind(this);
 
-    me.state.change(me.state.LOADING);
+    this.me.state.change(this.me.state.LOADING);
 
     this.connectToGameServer();
   }
@@ -67,8 +68,9 @@ export class Bootstrap {
   }
 
   registerStates() {
-    this.me.state.set(me.state.LOADING, new BootScreen());
-    this.me.state.set(me.state.LOGIN, new LoginScreen());
+    this.me.state.set(this.me.state.LOADING, new BootScreen());
+    this.me.state.set(Constants.STATES.LOGIN, new LoginScreen());
+    this.me.state.set(Constants.STATES.LOAD_WORLD, new WorldLoadingScreen(Game));
   }
 
   connectToGameServer() {
@@ -78,7 +80,7 @@ export class Bootstrap {
   }
 
   loaded() {
-    me.state.change(me.state.LOGIN);
+    this.me.state.change(Constants.STATES.LOGIN);
   }
 
   static boot() {
