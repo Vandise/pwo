@@ -98,14 +98,26 @@ describe('GameServer Middleware', () => {
 
       describe('on authentication failure', () => {
 
-        it('todo', () => {
-          /*
+        let data;
+
+        beforeEach(() => {
+          dispatcher.dispatchAction.returns(Promise.resolve(true));
+          data = { success: false, user: { name: 'test' } };
+
           mockMiddleware(store)(() => true)({
             type: `${id}_*`, payload: {
-              type: events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT,
+              type: events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, data
             }
           });
-          */
+        });
+
+        it('displays the message confirm modal', (done) => {
+          setTimeout(() => {
+            expect(dispatcher.dispatchAction).to.have.been.calledWith(
+              dispatcher.actions.forms.TOGGLE_FORM('message', true)
+            );
+            done();
+          }, 100);
         });
 
       });

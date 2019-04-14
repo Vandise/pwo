@@ -1,0 +1,28 @@
+.message-form-container {
+  width: 500px;
+  height: 250px;
+  padding:  0.5em 2em 0.5em 2em;
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  background-color: white;
+
+  .input-container {
+    margin-top: 0.5em;
+  }
+
+  .label-text {
+    display: inline-block;
+    width:   100px;
+  }
+
+  .user-actions {
+    margin-top: 2em;
+
+    .button {
+      padding: 0.5em 1.5em;
+      background-color: black;
+      color: white;
+    }
+  }
+}

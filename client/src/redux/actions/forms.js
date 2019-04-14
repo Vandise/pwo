@@ -11,5 +11,12 @@ export default {
     payload[form] = status;
 
     return { forms: payload };
+  }),
+
+  SET_CONTENT: createAction('SET_CONTENT', (heading, body) => {
+    return { content: {
+      heading,
+      body
+    } };
   })
 };
