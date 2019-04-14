@@ -27,7 +27,7 @@ export default class MessageConfirmForm extends React.Component {
           { this.props.content.body }
         </div>
         <div className='user-actions'>
-          <a className='button login red' onClick={() => this.confirm() }>Ok</a>
+          <a className='button confirm red' onClick={() => this.confirm() }>Ok</a>
         </div>
       </div>
     )
