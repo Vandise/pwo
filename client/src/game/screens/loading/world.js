@@ -53,7 +53,7 @@ class LoadWorldScreen extends dom.globals.me.Stage {
 
     me.game.world.addChild(this.progressBar, 2);
 
-    // world is hard-coded for now
+    // TODO: world is hard-coded for now
     // it will come from the user state
     Dispatcher.dispatchAction({
       type: events.CLIENT.MAPS.GET_MAP_DATA,

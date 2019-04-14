@@ -32,7 +32,8 @@ describe('GameServer Middleware', () => {
     td.replace(dispatcher, 'dispatchAction', sinon.stub())
 
     game = require('Game/').default;
-    td.replace(game, 'transitionGameState', sinon.spy())
+    td.replace(game, 'transitionGameState', sinon.spy());
+    td.replace(game, 'loadWorld', sinon.spy());
 
     stubMiddleware();
   });
@@ -123,5 +124,39 @@ describe('GameServer Middleware', () => {
       });
     });
 
+    describe('GET_MAP_DATA', () => {
+
+      let data;
+
+      beforeEach(() => {
+        dispatcher.dispatchAction.returns(Promise.resolve(true));
+        data = { valid: true };
+      });
+
+      it('loads the world on success', () => {
+        mockMiddleware(store)(() => true)({
+          type: `${id}_*`, payload: {
+            type: events.SERVER.MAPS.GET_MAP_DATA, data
+          }
+        });
+
+        expect(game.loadWorld).to.have.been.calledWith(data);
+      });
+
+      it('displays the message confirm modal on faikyre', (done) => {
+        mockMiddleware(store)(() => true)({
+          type: `${id}_*`, payload: {
+            type: events.SERVER.MAPS.GET_MAP_DATA, data: { valid: false }
+          }
+        });
+
+        setTimeout(() => {
+          expect(dispatcher.dispatchAction).to.have.been.calledWith(
+            dispatcher.actions.forms.TOGGLE_FORM('message', true)
+          );
+          done();
+        }, 100);
+      });
+    });
   });
 });
