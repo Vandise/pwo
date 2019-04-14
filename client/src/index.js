@@ -1,7 +1,10 @@
 import redux from 'Redux/';
+
 import BootScreen from 'Game/screens/loading/boot';
 import LoginScreen from 'Game/screens/auth/login';
 import WorldLoadingScreen from 'Game/screens/loading/world';
+import WorldScreen from 'Game/screens/world';
+
 import * as Constants from 'Root/constants';
 import * as Dispatcher from 'Util/dispatcher';
 import * as dom from 'Util/dom';
@@ -13,6 +16,7 @@ export class Bootstrap {
   constructor() {
     const { me } = dom.globals;
     this.me = me;
+
     window.store = redux.store;
   }
 
@@ -35,6 +39,7 @@ export class Bootstrap {
     this.me.loader.preload(
       Game.resources.sprites
         .concat(Game.resources.tiles)
+        .concat(Game.resources.tiles_animated)
     );
   }
 
@@ -71,6 +76,7 @@ export class Bootstrap {
     this.me.state.set(this.me.state.LOADING, new BootScreen());
     this.me.state.set(Constants.STATES.LOGIN, new LoginScreen());
     this.me.state.set(Constants.STATES.LOAD_WORLD, new WorldLoadingScreen(Game));
+    this.me.state.set(Constants.STATES.WORLD, new WorldScreen(Game));
   }
 
   connectToGameServer() {

@@ -25,7 +25,7 @@ export default {
     HOST: 'localhost',
     PROTOCOL: 'http',
     DEFAULT_ID: 'MS-01',
-    MAP_DATA_PATH: '/Volumes/Macintosh HD/Users/benanderson/local/pokemon-world-online/shared/maps',
+    MAP_DATA_PATH: '/Volumes/Macintosh HD/Users/benanderson/local/pokemon-world-online/maps',
     NAMESPACE: '/mapserver'
   },
 

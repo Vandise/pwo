@@ -2,9 +2,10 @@ import * as dom from 'Util/dom';
 
 class ProgressBar extends dom.globals.me.Renderable {
 
-  constructor(x, y, w, h) {
+  constructor(x, y, w, h, defaultText) {
     super(x, y, w, h);
 
+    this.defaultText = defaultText || 'Connecting to server...';
     this.invalidate = false;
     this.progress = 0;
     this.anchorPoint.set(0, 0);
@@ -14,7 +15,7 @@ class ProgressBar extends dom.globals.me.Renderable {
     this.text = new dom.globals.me.Text(40, 376.5, {
       font: 'Arial',
       size: '10px',
-      text: 'Connecting to server...',
+      text: this.defaultText,
       fillStyle: 'white'
     });
 

@@ -6,6 +6,7 @@ const dispatch = (socket, store, next, action) => () => {
     Dispatcher.actions.connection.SET_CONNECTION_STATUS(true)
   );
   store.getState().melon.bootloader.preloadAssets();
+  window.socket = socket;
 };
 
 export default {

@@ -40,10 +40,15 @@ var walkSync = function(dir, filelist) {
         var src = dir.replace(resourcesPath, '') + file;
         var file = {};
         var fragments = fileName.split('.');
-        file['name'] = fragments[0];
-        file['src'] = staticResourceDir + src;
 
         var key = src.split('/')[0];
+
+        file['name'] = fragments[0]
+        if (key == 'items') {
+          file['name'] = 'item_' + fragments[0];
+        }
+
+        file['src'] = staticResourceDir + src;
 
         if (!(key in filelist)) {
           filelist[key] = [];

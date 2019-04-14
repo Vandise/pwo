@@ -6,5 +6,6 @@ export const UI_MOUNT_ID = 'ui';
 
 export const STATES = {
   LOGIN: globals.me.state.USER + 1,
-  LOAD_WORLD: globals.me.state.USER + 2
+  LOAD_WORLD: globals.me.state.USER + 2,
+  WORLD: globals.me.state.USER + 3
 };
