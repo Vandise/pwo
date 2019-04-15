@@ -9,8 +9,13 @@ export default class AbstractPlayer extends dom.globals.me.Entity {
   constructor(x, y, settings) {
     super(x, y, settings);
 
+    this.heading = { y: 0, x: 0 };
     this.currentDirection = DEFAULT_DIRECTION;
     this.notifyDirectionChange = () => true;
+  }
+
+  setHeading(x, y) {
+    this.heading = { x, y };
   }
 
   setDirectionChangeNotifier(cb) {

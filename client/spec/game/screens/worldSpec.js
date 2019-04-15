@@ -13,7 +13,7 @@ describe('World Screen', () => {
     td.replace(game, 'setMainPlayerEntity', sinon.spy());
     td.replace(game, 'getState', () => {
       return {
-        user: { user: { world: 'world_00', position: { x: 0, y: 0 } } }
+        user: { user: { world: 'world_00', vel: {x: 0, y: 0}, position: { x: 0, y: 0 } } }
       };
     });
     td.replace(game, 'worldName', 'world_00');

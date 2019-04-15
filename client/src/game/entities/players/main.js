@@ -85,6 +85,6 @@ export default class MainPlayer extends AbstractPlayer {
   }
 
   onCollision(response, other) {
-    return true;
+    return false;
   }
 }

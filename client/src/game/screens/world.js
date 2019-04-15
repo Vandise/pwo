@@ -37,11 +37,11 @@ class WorldScreen extends dom.globals.me.Stage {
 
   onResetEvent() {
     const { me } = dom.globals;
-
     this.enableControls();
-
     me.levelDirector.loadLevel(this.game.worldName);
     this.loadPlayer();
+
+    this.game.ready();
   }
 
   onDestroyEvent() {
