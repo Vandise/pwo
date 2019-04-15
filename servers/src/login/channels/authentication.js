@@ -9,35 +9,42 @@ export default (server, socketID) => {
 
   socket.on(Events.CLIENT.AUTHENTICATION.LOGIN_ATTEMPT, (data) => {
 
-    if (data.username != 'test' || data.password != 'test') {
+    //
+    // TODO:
+    //  sanitize & salt pws, poc only
+    //
+    server.db.query(`
+      SELECT
+        username, world, position, spritesheet
+      FROM users
+      WHERE
+        username = $1
+      AND
+        password = $2
+    `, [data.username, data.password]).then((result) => {
 
-      server.logger.info(`Authentication failed for user: ${data.username}`);
+      if (result.rowCount == 0) {
 
-      socket.emit(Events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT,
-        originPayload({
-          success: false,
-          status: AUTH_FAILED_MSG
-        }, socket)
-      );
+        server.logger.info(`Authentication failed for user: ${data.username}`);
 
-    } else {
+        socket.emit(Events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT,
+          originPayload({
+            success: false,
+            status: AUTH_FAILED_MSG
+          }, socket)
+        );
 
-      server.logger.info(`Authentication successful for user: ${data.username}`);
+      } else {
+        const user = result.rows[0];
 
-      socket.emit(Events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT,
-        originPayload({
-          success: true,
-          user: {
-            characterName: 'Ben',
-            pos: {
-              x: 320,
-              y: 320
-            },
-            world: 'world_00'
-          }
-        }, socket)
-      );
+        server.logger.info(`Authentication successful for user: ${user.username}`);
 
-    }
+        socket.emit(Events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT,
+          originPayload({ success: true, user }, socket)
+        );
+
+      }
+    });
+
   });
 };

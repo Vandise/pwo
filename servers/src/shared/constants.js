@@ -29,6 +29,15 @@ export default {
     NAMESPACE: '/mapserver'
   },
 
+  DATABASE: {
+    development: {
+      host: 'localhost',
+      username: 'benanderson',
+      password: '',
+      database: 'pwo_development'
+    }
+  },
+
   CLIENT: {
     VERSION: '0.0.1',
     NAMESPACE: '/'

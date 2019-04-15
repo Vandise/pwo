@@ -16,6 +16,7 @@ export default class LoginServer {
     this.serverID = Constants.LOGINSERVER.DEFAULT_ID;
 
     this.server   = http.createServer(this.app);
+    this.db       = null;
 
     this.gameservers = {};
 
