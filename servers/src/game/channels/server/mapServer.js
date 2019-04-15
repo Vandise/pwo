@@ -25,9 +25,23 @@ export default (server, socket) => {
     // send the response to the proper client
     //
     if (originSocket) {
+
+      //
+      // send map data to client
+      //
       originSocket.emit(Events.SERVER.MAPS.GET_MAP_DATA,
         originPayload(Object.assign(data, { valid: true }), server.origin)
       );
+
+      //
+      // broadcast to all others in the mapserver this person joined
+      //
+      originSocket.broadcast.to(originSocket.world).emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
+        position: originSocket.player.position,
+        velocity: { x: 0, y: 0 },
+        playerID: originSocket.player.id,
+        spritesheet: originSocket.player.spritesheet
+      }, socket));
     }
   });
 

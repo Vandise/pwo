@@ -30,7 +30,8 @@ export default (server, socketID) => {
         socket.emit(Events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT,
           originPayload({
             success: false,
-            status: AUTH_FAILED_MSG
+            status: AUTH_FAILED_MSG,
+            userConnID: data.originID
           }, socket)
         );
 
@@ -40,7 +41,7 @@ export default (server, socketID) => {
         server.logger.info(`Authentication successful for user: ${user.username}`);
 
         socket.emit(Events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT,
-          originPayload({ success: true, user }, socket)
+          originPayload({ success: true, user, userConnID: data.originID }, socket)
         );
 
       }

@@ -79,8 +79,8 @@ export default class GameServer {
     this.app.set('port', this.port);
     this.io = socketio.listen(this.server);
 
-    this.loadExtensions();
     this.connectLoginServer();
+    this.loadExtensions();
 
     this.server.listen(this.app.get('port'), () => {
       this.logger.info('GameServer listening on port '+this.app.get('port')+' in '+this.env+' mode');

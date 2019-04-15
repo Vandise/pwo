@@ -5,6 +5,9 @@ const SEVER_VELOCITY = 2.5;
 const POSITION_THRESHOLD = 5; // x-y margin of error for client-server position
 
 const clientServerPositionCheck = (clientPosition, serverPosition, velocity) => {
+  // todo:
+  //  validate the time it took to travel this distance for legitimate speedhack detection
+  //  not just warping to invalid coords
   if (velocity.x == 0 && velocity.y == 0) {
     return true;
   }
@@ -88,9 +91,17 @@ export default (server, socketID) => {
         // DB update
         conn.emit(Events.SERVER.PLAYER.UPDATE_POSITION, originPayload(Object.assign({}, data, { playerID: socket.player.id }), socket));
 
+        //
         // broadcast to all other players on this mapserver
         // the direction and velocity
         // also notify the sending client of the calculated position -- odds are it off by ~ 1
+        //
+        socket.broadcast.to(world).emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
+          position: socket.player.position,
+          velocity,
+          playerID: socket.player.id
+        }, socket));
+
       }
 
     } else {
