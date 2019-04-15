@@ -21,7 +21,13 @@ export default (server, socketID) => {
   server.lsSocket.on(Events.SERVER.AUTHENTICATION.LOGIN_ATTEMPT, (data) => {
 
     if (data.success == true) {
-      socket.player = { id: data.user.id };
+      socket.player = {
+        id: data.user.id,
+        position: data.user.position,
+        hackFlags: {
+          speedhack: false
+        }
+      };
     }
 
     server.logger.info(`Emitted login response to client, success: ${data.success}`);

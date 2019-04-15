@@ -34,6 +34,7 @@ describe('GameServer Middleware', () => {
     game = require('Game/').default;
     td.replace(game, 'transitionGameState', sinon.spy());
     td.replace(game, 'loadWorld', sinon.spy());
+    td.replace(game, 'getMainPlayerEntity', sinon.stub());
 
     stubMiddleware();
   });
@@ -143,10 +144,50 @@ describe('GameServer Middleware', () => {
         expect(game.loadWorld).to.have.been.calledWith(data);
       });
 
-      it('displays the message confirm modal on faikyre', (done) => {
+      it('displays the message confirm modal on failure', (done) => {
         mockMiddleware(store)(() => true)({
           type: `${id}_*`, payload: {
             type: events.SERVER.MAPS.GET_MAP_DATA, data: { valid: false }
+          }
+        });
+
+        setTimeout(() => {
+          expect(dispatcher.dispatchAction).to.have.been.calledWith(
+            dispatcher.actions.forms.TOGGLE_FORM('message', true)
+          );
+          done();
+        }, 100);
+      });
+    });
+
+    describe('UPDATE_POSITION', () => {
+
+      let player;
+
+      beforeEach(() => {
+        dispatcher.dispatchAction.returns(Promise.resolve(true));
+        player = {
+          pos: { x: 0, y:0 }
+        };
+        game.getMainPlayerEntity.returns(player);
+      });
+
+      it('forces a new player position', () => {
+        const position = { x: 100, y: 100 };
+        mockMiddleware(store)(() => true)({
+          type: `${id}_*`, payload: {
+            type: events.SERVER.PLAYER.UPDATE_POSITION, data: { position }
+          }
+        });
+
+        expect(player.pos).to.deep.equal(position);
+      });
+
+      it('displays the message confirm modal', (done) => {
+        const position = { x: 100, y: 100 };
+        mockMiddleware(store)(() => true)({
+          type: `${id}_*`, payload: {
+            type: events.SERVER.PLAYER.UPDATE_POSITION, data: { position }
           }
         });
 

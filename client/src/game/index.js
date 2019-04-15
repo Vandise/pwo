@@ -16,6 +16,10 @@ class Game {
     this.mainPlayerEntity = null;
   }
 
+  getMainPlayerEntity() {
+    return this.mainPlayerEntity;
+  }
+
   setMainPlayerEntity(entity) {
     this.mainPlayerEntity = entity;
   }
