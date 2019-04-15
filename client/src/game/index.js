@@ -3,6 +3,9 @@ import redux from 'Redux/';
 import * as dom from 'Util/dom';
 import MapLoader from 'Extensions/map/mapLoader';
 
+//
+// TODO: unit tests after refactoring / finalizing functionality
+//
 class Game {
 
   constructor() {
