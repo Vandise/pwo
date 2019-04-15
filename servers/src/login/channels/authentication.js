@@ -28,7 +28,12 @@ export default (server, socketID) => {
         originPayload({
           success: true,
           user: {
-            characterName: 'Administrator'
+            characterName: 'Ben',
+            pos: {
+              x: 320,
+              y: 320
+            },
+            world: 'world_00'
           }
         }, socket)
       );

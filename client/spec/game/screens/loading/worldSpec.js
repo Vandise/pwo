@@ -13,6 +13,11 @@ describe('WorldLoadingScreen', () => {
 
     game = require('Game/').default;
     td.replace(game, 'transitionGameState', sinon.spy());
+    td.replace(game, 'getState', () => {
+      return {
+        user: { world: 'world_00' }
+      };
+    });
 
     dispatcher = require('Util/dispatcher');
     td.replace(dispatcher, 'dispatchAction', sinon.spy());

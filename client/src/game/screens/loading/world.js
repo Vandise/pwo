@@ -35,6 +35,7 @@ class LoadWorldScreen extends dom.globals.me.Stage {
 
   onResetEvent() {
     const { me } = dom.globals;
+    const user = this.game.getState().user;
 
     me.loader.onload = this.loaded.bind(this);
 
@@ -58,7 +59,7 @@ class LoadWorldScreen extends dom.globals.me.Stage {
     Dispatcher.dispatchAction({
       type: events.CLIENT.MAPS.GET_MAP_DATA,
       payload: {
-        name: 'world_00'
+        name: user.world
       }
     });
   }

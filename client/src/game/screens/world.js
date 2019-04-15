@@ -11,8 +11,21 @@ class WorldScreen extends dom.globals.me.Stage {
     this.game = game;
   }
 
+  enableControls() {
+    const { me } = dom.globals;
+
+    me.sys.pauseOnBlur = false;
+    me.input.bindKey(me.input.KEY.LEFT,  "left");
+    me.input.bindKey(me.input.KEY.RIGHT, "right");
+    me.input.bindKey(me.input.KEY.UP,    "up");
+    me.input.bindKey(me.input.KEY.DOWN,  "down");
+  }
+
   onResetEvent() {
     const { me } = dom.globals;
+
+    this.enableControls();
+
     me.levelDirector.loadLevel(this.game.worldName);
   }
 
