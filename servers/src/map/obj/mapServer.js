@@ -17,6 +17,8 @@ export default class MapServer {
 
     this.serverID = Constants.MAPSERVER.DEFAULT_ID;
 
+    this.db = null;
+
     this.port     = Constants.MAPSERVER.DEFAULT_PORT;
     this.server   = http.createServer(this.app);
 
@@ -119,6 +121,7 @@ export default class MapServer {
   close() {
     this.io.close();
     this.server.close();
+    this.gsSocket.disconnect(true);
   }
 
 };

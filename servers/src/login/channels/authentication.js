@@ -15,7 +15,7 @@ export default (server, socketID) => {
     //
     server.db.query(`
       SELECT
-        username, world, position, spritesheet
+        id, username, world, position, spritesheet
       FROM users
       WHERE
         username = $1

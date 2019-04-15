@@ -1,7 +1,10 @@
 import authentication from './authentication';
 import mapData from './mapData';
+import player from './player';
 
-export default [
+const actions = [
   authentication,
   mapData,
-];
+].concat(player);
+
+export default actions;

@@ -49,6 +49,10 @@ export default class LoginServer {
   close() {
     this.io.close();
     this.server.close();
+
+    Object.entries(this.gameservers).forEach(([id, socket]) => {
+      socket.disconnect(true);
+    });
   }
 
 };

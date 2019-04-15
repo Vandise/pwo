@@ -1,4 +1,6 @@
 import * as dom from 'Util/dom';
+import * as Dispatcher from 'Util/dispatcher';
+import events from 'Events/';
 
 const MOVEMENT_VELOCITY = 2.5;
 const MOVEMENT_FRAME_SPEED = 150;
@@ -9,12 +11,13 @@ export default class MainPlayer extends dom.globals.me.Entity {
 
     settings.width = 48;
     settings.height = 63;
-    settings.image = 'male_main';
     settings.framewidth = 48;
     settings.frameheight = 63;
     settings.shapes[0] = new me.Rect(0, 0, 25, 32);
 
     super(x, y, settings);
+
+    window.player = this;
 
     this.me = dom.globals.me;
 
@@ -44,6 +47,8 @@ export default class MainPlayer extends dom.globals.me.Entity {
   }
 
   handleMovement() {
+    let animation = null;
+
     if (this.me.input.isKeyPressed('left')) {
       this.currentDirection = 'left';
       this.body.vel.x = -MOVEMENT_VELOCITY;
@@ -83,10 +88,25 @@ export default class MainPlayer extends dom.globals.me.Entity {
       this.body.vel.x = 0;
       this.body.vel.y = 0;
 
-      const animation = `stand_${this.currentDirection}`;
+      animation = `stand_${this.currentDirection}`;
       if (!this.renderable.isCurrentAnimation(animation)) {
         this.renderable.setCurrentAnimation(animation);
       }
+    }
+
+    if (animation != `stand_${this.currentDirection}`) {
+      Dispatcher.dispatchAction({
+        type: events.CLIENT.PLAYER.UPDATE_POSITION,
+        payload: {
+          direction: this.currentDirection,
+          velocity: this.body.vel,
+          time: Date.now(),
+          position: {
+            x: this.pos.x,
+            y: this.pos.y
+          }
+        }
+      });
     }
   }
 

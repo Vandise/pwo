@@ -15,6 +15,10 @@ module.exports = {
       REGISTER_MAP_CONNECTION: 'register_map_connection',
       GET_MAP_SERVER_DATA: 'get_map_server_data',
       GET_MAP_DATA: 'get_map_data'
+    },
+
+    PLAYER: {
+      UPDATE_POSITION: 'player_update_position'
     }
   },
 
@@ -31,6 +35,10 @@ module.exports = {
 
     MAPS: {
       GET_MAP_DATA: 'get_map_data'
+    },
+
+    PLAYER: {
+      UPDATE_POSITION: 'player_update_position'
     }
   }
 };

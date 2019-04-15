@@ -92,5 +92,13 @@ export default class GameServer {
     this.lsSocket.disconnect(true);
     this.io.close();
     this.server.close();
+
+    Object.entries(this.connections).forEach(([id, socket]) => {
+      socket.disconnect(true);
+    });
+
+    Object.entries(this.maps).forEach(([id, socket]) => {
+      socket.disconnect(true);
+    });
   }
 };

@@ -26,7 +26,8 @@ class WorldScreen extends dom.globals.me.Stage {
     const { user } = this.game.getState().user;
 
     const player = me.pool.pull('MainPlayer', user.position.x, user.position.y, {
-      shapes: []
+      shapes: [],
+      image: user.spritesheet
     });
 
     me.game.world.addChild(player);
