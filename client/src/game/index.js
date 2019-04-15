@@ -2,6 +2,7 @@ import resources from './resources';
 import redux from 'Redux/';
 import * as dom from 'Util/dom';
 import MapLoader from 'Extensions/map/mapLoader';
+import entities from 'Game/entities/';
 
 //
 // TODO: unit tests after refactoring / finalizing functionality
@@ -11,6 +12,7 @@ class Game {
   constructor() {
     this.resources = resources;
     this.worldName = null;
+    this.entities = entities;
   }
 
   getState() {

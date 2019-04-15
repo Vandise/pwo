@@ -9,5 +9,7 @@ module.exports = {
   event: require('./event'),
   Stage: require('./stage'),
   state: require('./state'),
-  ColorLayer: require('./colorLayer')
+  ColorLayer: require('./colorLayer'),
+  pool: require('./pool'),
+  Entity: require('./entity')
 };

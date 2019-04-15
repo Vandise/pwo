@@ -26,4 +26,7 @@ module.exports = function(x, y, w, h) {
   this.getColor = sinon.stub();
   this.setColor = sinon.spy();
   this.fillRect = sinon.spy();
+  this.addAnimation = sinon.spy();
+  this.setCurrentAnimation = sinon.spy();
+  this.isCurrentAnimation = sinon.spy();
 };

@@ -15,7 +15,7 @@ describe('WorldLoadingScreen', () => {
     td.replace(game, 'transitionGameState', sinon.spy());
     td.replace(game, 'getState', () => {
       return {
-        user: { world: 'world_00' }
+        user: { user: { world: 'world_00' } }
       };
     });
 
@@ -32,6 +32,12 @@ describe('WorldLoadingScreen', () => {
     it('transitions to the world state', () => {
       screen.loaded();
       expect(game.transitionGameState).to.have.been.calledWith(Constants.STATES.WORLD);
+    });
+
+    it('adds the entities to the world pool', () => {
+      screen.loaded();
+
+      expect(dom.globals.me.pool.register).to.have.been.called;
     });
   });
 
