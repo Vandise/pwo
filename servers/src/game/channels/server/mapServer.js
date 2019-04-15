@@ -34,13 +34,34 @@ export default (server, socket) => {
       );
 
       //
+      // add other players to client
+      //
+
+      const connectionsInWorld = server.io.sockets.adapter.rooms[originSocket.world].sockets;
+      for( let id in  connectionsInWorld ) {
+        if ( id != originSocket.id) {
+          const otherPlayerSocket = server.connections[id];
+
+          originSocket.emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
+            position: otherPlayerSocket.player.position,
+            velocity: { x: 0, y: 0 },
+            playerID: otherPlayerSocket.player.id,
+            spritesheet: otherPlayerSocket.player.spritesheet,
+            type: 'setpos'
+          }, socket));
+
+        }
+      }
+
+      //
       // broadcast to all others in the mapserver this person joined
       //
       originSocket.broadcast.to(originSocket.world).emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
         position: originSocket.player.position,
         velocity: { x: 0, y: 0 },
         playerID: originSocket.player.id,
-        spritesheet: originSocket.player.spritesheet
+        spritesheet: originSocket.player.spritesheet,
+        type: 'setpos'
       }, socket));
     }
   });

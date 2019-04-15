@@ -12,6 +12,8 @@ const clientServerPositionCheck = (clientPosition, serverPosition, velocity) => 
     return true;
   }
 
+  console.log("clientServerPositionCheck: \n\n", clientPosition, serverPosition);
+
   const xValid = (
     Math.abs(clientPosition.x) >= (Math.abs(serverPosition.x) - POSITION_THRESHOLD)
     && Math.abs(clientPosition.x) <= (Math.abs(serverPosition.x) + POSITION_THRESHOLD)
@@ -38,24 +40,6 @@ export default (server, socketID) => {
     const velocity = data.velocity;
     const clientPosition = data.position;
 
-/*
-    server.logger.info(`=====================================================`);
-
-    server.logger.info(`Player: ${socket.player.id}`);
-    server.logger.info(`Direction: ${direction}`);
-    server.logger.info(`Lag: ${lag}`);
-    server.logger.info(`lastCommandTime: ${lastCommandTime}`);
-    server.logger.info(`Velocity: ${JSON.stringify(velocity)}`);
-
-    const secondsToTravel = (now - lastCommandTime) / 1000.0;
-
-    server.logger.info(`secondsToTravel: ${secondsToTravel}`);
-    server.logger.info(`Server Position: ${JSON.stringify(socket.player.position)}`);
-    server.logger.info(`Client Position: ${JSON.stringify(clientPosition)}`);
-
-    server.logger.info(`                                   `);
-*/
-
     const positionValid = clientServerPositionCheck(clientPosition, socket.player.position, velocity)
 
     server.logger.info(`Position valid: ${positionValid}`);
@@ -63,8 +47,9 @@ export default (server, socketID) => {
 
     //
     // speed hack check
+    //  (lastCommandTime + intervalTime) > now
     //
-    if ((lastCommandTime + intervalTime) > now || !positionValid) {
+    if (!positionValid) {
       server.logger.info(`Player: ${socket.player.id} - client movement velocity incorrect`);
       server.logger.info(`Server Position: ${JSON.stringify(socket.player.position)}`);
       server.logger.info(`Client Position: ${JSON.stringify(clientPosition)}`);
@@ -99,16 +84,27 @@ export default (server, socketID) => {
         socket.broadcast.to(world).emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
           position: socket.player.position,
           velocity,
-          playerID: socket.player.id
+          playerID: socket.player.id,
+          spritesheet: socket.player.spritesheet,
+          type: 'move'
         }, socket));
 
       }
 
     } else {
-      server.logger.info(`TODO: notify client of socket.player.position, remove speedhack flag, broadcast to others`);
+
+      server.logger.info(`SpeedHack Flag`);
 
       socket.emit(Events.SERVER.PLAYER.UPDATE_POSITION, originPayload({
-        position: socket.player.position
+        position: socket.player.position,
+        velocity: { x: 0, y: 0 }
+      }, socket));
+
+      socket.broadcast.to(world).emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
+        position: socket.player.position,
+        playerID: socket.player.id,
+        velocity: { x: 0, y: 0 },
+        type: 'setpos'
       }, socket));
 
       socket.player.hackFlags.speedhack = false;
