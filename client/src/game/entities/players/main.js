@@ -6,14 +6,19 @@ const MOVEMENT_FRAME_SPEED = 150;
 export default class MainPlayer extends dom.globals.me.Entity {
 
   constructor(x, y, settings) {
+
+    console.log(x, y, settings);
+
     settings.width = 48;
     settings.height = 63;
-    settings.image = 'Male_MainPlayer_Default';
+    settings.image = 'male_main';
     settings.framewidth = 48;
     settings.frameheight = 63;
     settings.shapes[0] = new me.Rect(0, 0, 25, 32);
 
     super(x, y, settings);
+
+    this.me = dom.globals.me;
 
     this.body.setVelocity(2.5, 2.5);
     this.body.setFriction(0.4,0.4);

@@ -13,6 +13,11 @@ class Game {
     this.resources = resources;
     this.worldName = null;
     this.entities = entities;
+    this.mainPlayerEntity = null;
+  }
+
+  setMainPlayerEntity(entity) {
+    this.mainPlayerEntity = entity;
   }
 
   getState() {

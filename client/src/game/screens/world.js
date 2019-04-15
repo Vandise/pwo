@@ -21,12 +21,26 @@ class WorldScreen extends dom.globals.me.Stage {
     me.input.bindKey(me.input.KEY.DOWN,  "down");
   }
 
+  loadPlayer() {
+    const { me } = dom.globals;
+    const { user } = this.game.getState().user;
+
+    const player = me.pool.pull('MainPlayer', user.pos.x, user.pos.y, {
+      shapes: []
+    });
+
+    me.game.world.addChild(player);
+
+    this.game.setMainPlayerEntity(player);
+  }
+
   onResetEvent() {
     const { me } = dom.globals;
 
     this.enableControls();
 
     me.levelDirector.loadLevel(this.game.worldName);
+    this.loadPlayer();
   }
 
   onDestroyEvent() {
