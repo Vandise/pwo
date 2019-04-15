@@ -2,10 +2,12 @@ import * as dom from 'Util/dom';
 import * as Dispatcher from 'Util/dispatcher';
 import events from 'Events/';
 
+import AbstractPlayer from './abstractPlayer';
+
 const MOVEMENT_VELOCITY = 2.5;
 const MOVEMENT_FRAME_SPEED = 150;
 
-export default class MainPlayer extends dom.globals.me.Entity {
+export default class MainPlayer extends AbstractPlayer {
 
   constructor(x, y, settings) {
 
@@ -24,89 +26,49 @@ export default class MainPlayer extends dom.globals.me.Entity {
     this.body.setVelocity(2.5, 2.5);
     this.body.setFriction(0.4,0.4);
     this.alwaysUpdate = true;
+    this.anchorPoint.set(-0.45, -0.6);
 
     this.me.game.viewport.follow(this, this.me.game.viewport.AXIS.BOTH);
 
-    this.renderable.addAnimation("stand_left",  [10])
-    this.renderable.addAnimation("walk_left",  [9, 10, 11], MOVEMENT_FRAME_SPEED);
+    super.addAnimations();
 
-    this.renderable.addAnimation("stand_right",  [4]);
-    this.renderable.addAnimation("walk_right",  [3, 4, 5], MOVEMENT_FRAME_SPEED);
+    this.setDirectionChangeNotifier(this.notifyVelocityChange.bind(this));
+  }
 
-    this.renderable.addAnimation("stand_up",  [1]);
-    this.renderable.addAnimation("walk_up",  [0, 1, 2], MOVEMENT_FRAME_SPEED);
+  notifyVelocityChange(direction) {
+    //
+    // only send notifications to others
+    // on velocity change, not position
+    //
+    Dispatcher.dispatchAction({
+      type: events.CLIENT.PLAYER.UPDATE_POSITION,
+      payload: {
+        direction: this.currentDirection,
+        velocity: this.body.vel,
+        time: Date.now(),
+        position: {
+          x: this.pos.x,
+          y: this.pos.y
+        }
+      }
+    });
 
-    this.renderable.addAnimation("stand_down",  [7]);
-    this.renderable.addAnimation("walk_down",  [6, 7, 8], MOVEMENT_FRAME_SPEED);
-
-    this.renderable.setCurrentAnimation("stand_up");
-
-    this.currentDirection = 'up';
-
-    this.anchorPoint.set(-0.45, -0.6);
   }
 
   handleMovement() {
-    let animation = null;
-
     if (this.me.input.isKeyPressed('left')) {
-      this.currentDirection = 'left';
-      this.body.vel.x = -MOVEMENT_VELOCITY;
-      this.body.vel.y = 0;
-
-      if (!this.renderable.isCurrentAnimation('walk_left')) {
-        this.renderable.setCurrentAnimation('walk_left');
-      }
+      super.moveLeft();
     }
     else if (this.me.input.isKeyPressed('right')) {
-      this.currentDirection = 'right';
-      this.body.vel.x = MOVEMENT_VELOCITY;
-      this.body.vel.y = 0;
-
-      if (!this.renderable.isCurrentAnimation('walk_right')) {
-        this.renderable.setCurrentAnimation('walk_right');
-      }
+      super.moveRight();
     }
     else if (this.me.input.isKeyPressed('up')) {
-      this.currentDirection = 'up';
-      this.body.vel.y = -MOVEMENT_VELOCITY;
-      this.body.vel.x = 0;
-
-      if (!this.renderable.isCurrentAnimation('walk_up')) {
-        this.renderable.setCurrentAnimation('walk_up');
-      }
+      super.moveUp();
     }
     else if (this.me.input.isKeyPressed('down')) {
-      this.currentDirection = 'down';
-      this.body.vel.y = MOVEMENT_VELOCITY;
-      this.body.vel.x = 0;
-
-      if (!this.renderable.isCurrentAnimation('walk_down')) {
-        this.renderable.setCurrentAnimation('walk_down');
-      }
+      super.moveDown();
     } else {
-      this.body.vel.x = 0;
-      this.body.vel.y = 0;
-
-      animation = `stand_${this.currentDirection}`;
-      if (!this.renderable.isCurrentAnimation(animation)) {
-        this.renderable.setCurrentAnimation(animation);
-      }
-    }
-
-    if (animation != `stand_${this.currentDirection}`) {
-      Dispatcher.dispatchAction({
-        type: events.CLIENT.PLAYER.UPDATE_POSITION,
-        payload: {
-          direction: this.currentDirection,
-          velocity: this.body.vel,
-          time: Date.now(),
-          position: {
-            x: this.pos.x,
-            y: this.pos.y
-          }
-        }
-      });
+      super.idle();
     }
   }
 

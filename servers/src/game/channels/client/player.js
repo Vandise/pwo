@@ -15,14 +15,14 @@ export default (server, socketID) => {
     const velocity = data.velocity;
     const currentPosition = data.position;
 
-/*
+
     server.logger.info(`
       Player: ${socket.player.id} | 
       Direction: ${direction} | 
       Lag: ${lag} | 
       Velocity: ${velocity}
     `);
-*/
+
     //
     // speed hack check
     //
@@ -42,6 +42,7 @@ export default (server, socketID) => {
 
         // broadcast to all other players on this mapserver
         // the direction and velocity
+        // also notify the sending client of the calculated position -- odds are it off by ~ 1
       }
 
     }

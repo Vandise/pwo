@@ -86,6 +86,14 @@ export default class GameServer {
       this.logger.info('GameServer listening on port '+this.app.get('port')+' in '+this.env+' mode');
     });
 
+/*
+    setInterval(() => {
+      //console.log('/',  Object.keys(this.io.of('/').sockets) );
+      //console.log('/mapserver',  Object.keys(this.io.of('/mapserver').sockets) );
+      //console.log('world_00',  Object.keys(this.io.in('world_00').sockets) );
+      //console.log('world_00                   : ', this.io.sockets.adapter.rooms['world_00']);
+    }, 3000);
+*/
   }
 
   close() {

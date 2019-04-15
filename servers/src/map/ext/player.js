@@ -6,7 +6,7 @@ export default (server) => {
   socket.on(Events.SERVER.PLAYER.UPDATE_POSITION, (data) => {
     const { playerID, position, velocity } = data;
 
-    //server.logger.info(`Updating player(${playerID}) position| x: ${position.x}, y: ${position.y}, vx:  ${velocity.x}, vy: ${velocity.y}`);
+    server.logger.info(`Updating player(${playerID}) position| x: ${position.x}, y: ${position.y}, vx:  ${velocity.x}, vy: ${velocity.y}`);
 
     const x = position.x + velocity.x;
     const y = position.y + velocity.y;

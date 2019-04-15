@@ -19,6 +19,7 @@ export default (server, socket) => {
     // emit events only to others in the same world
     //
     originSocket.world = data.name;
+    originSocket.join(data.name);
 
     //
     // send the response to the proper client
