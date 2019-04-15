@@ -5,6 +5,8 @@ export default (server) => {
 
   server.io.of(Constants.CLIENT.NAMESPACE).on('connection', (socket) => {
 
+    socket.world = null;
+
     server.logger.info(`Client Connected: ${socket.id}`);
 
     server.connections[socket.id] = socket;

@@ -16,6 +16,11 @@ export default (server, socket) => {
     const originSocket = server.connections[getOriginID(data)];
 
     //
+    // emit events only to others in the same world
+    //
+    originSocket.world = data.name;
+
+    //
     // send the response to the proper client
     //
     if (originSocket) {
