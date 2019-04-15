@@ -32,7 +32,6 @@ class LoadWorldScreen extends dom.globals.me.Stage {
     const { me } = dom.globals;
 
     Object.keys(this.game.entities).forEach((name) => {
-      console.log(name, this.game.entities[name]);
       me.pool.register(name, this.game.entities[name]);
     });
 

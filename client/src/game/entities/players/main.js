@@ -7,8 +7,6 @@ export default class MainPlayer extends dom.globals.me.Entity {
 
   constructor(x, y, settings) {
 
-    console.log(x, y, settings);
-
     settings.width = 48;
     settings.height = 63;
     settings.image = 'male_main';
