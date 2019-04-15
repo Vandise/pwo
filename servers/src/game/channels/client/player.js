@@ -20,7 +20,7 @@ export default (server, socketID) => {
       Player: ${socket.player.id} | 
       Direction: ${direction} | 
       Lag: ${lag} | 
-      Velocity: ${velocity}
+      Velocity: ${JSON.stringify(velocity)}
     `);
 
     //

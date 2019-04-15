@@ -11,5 +11,6 @@ module.exports = {
   state: require('./state'),
   ColorLayer: require('./colorLayer'),
   pool: require('./pool'),
-  Entity: require('./entity')
+  Entity: require('./entity'),
+  levelDirector: require('./levelDirector')
 };

@@ -1,3 +1,4 @@
 module.exports = {
-  register: sinon.spy()
+  register: sinon.spy(),
+  pull: sinon.stub()
 };
