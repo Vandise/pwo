@@ -55,8 +55,6 @@ export default (server, socketID) => {
       server.logger.info(`Client Position: ${JSON.stringify(clientPosition)}`);
 
       socket.player.hackFlags.speedhack = true;
-
-      return;
     }
 
     if(!socket.player.hackFlags.speedhack) {
@@ -104,7 +102,8 @@ export default (server, socketID) => {
         position: socket.player.position,
         playerID: socket.player.id,
         velocity: { x: 0, y: 0 },
-        type: 'setpos'
+        type: 'setpos',
+        force: true
       }, socket));
 
       socket.player.hackFlags.speedhack = false;
