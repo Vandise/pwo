@@ -30,17 +30,17 @@ class LoadWorldScreen extends dom.globals.me.Stage {
 
   loaded() {
     const { me } = dom.globals;
-
     Object.keys(this.game.entities).forEach((name) => {
       me.pool.register(name, this.game.entities[name]);
     });
-
     this.game.transitionGameState(Constants.STATES.WORLD);
   }
 
   onResetEvent() {
     const { me } = dom.globals;
     const { user } = this.game.getState().user;
+
+    me.plugins.debugPanel.show();
 
     me.loader.onload = this.loaded.bind(this);
 

@@ -46,11 +46,11 @@ export class Bootstrap {
   debug() {
     const { document } = dom.globals;
 
-    if (document.location.hash === "#debug") {
+    //if (document.location.hash === "#debug") {
       window.onReady(() => {
-        me.utils.function.defer(me.plugin.register, this, me.debug.Panel, "debug");
+        me.utils.function.defer(me.plugin.register, this, me.debug.Panel, "debugPanel");
       });
-    }
+    //}
   }
 
   initVideoBootScreen() {
