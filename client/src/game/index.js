@@ -14,6 +14,32 @@ class Game {
     this.worldName = null;
     this.entities = entities;
     this.mainPlayerEntity = null;
+    this.readyStatus = false;
+    window.game = this;
+  }
+
+  //
+  // TODO:
+  // not optimal to create a new sprite if the user disconnects
+  // and there's events still coming in
+  //
+  addOtherPlayer(id, payload) {
+    const player = dom.globals.me.pool.pull('OtherPlayer', payload.position.x, payload.position.y, {
+      shapes: [],
+      image: payload.spritesheet
+    });
+
+    player.name = id;
+
+    dom.globals.me.game.world.addChild(player);
+  }
+
+  getOtherPlayer(name) {
+    return dom.globals.me.game.world.getChildByName(name)[0];
+  }
+
+  ready() {
+    this.readyStatus = true;
   }
 
   getMainPlayerEntity() {
