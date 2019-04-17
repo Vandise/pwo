@@ -55,6 +55,6 @@
     "start": "NODE_ENV=development node scripts/server.js",
     "build": "webpack --config webpack.production.config.js",
     "test:watch": "./node_modules/mocha-webpack/bin/mocha-webpack --watch",
-    "test": "./node_modules/mocha-webpack/bin/mocha-webpack"
+    "test": "NODE_ENV=test ./node_modules/mocha-webpack/bin/mocha-webpack"
   }
 }

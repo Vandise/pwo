@@ -21,11 +21,13 @@ export function pushLog(type, payload, msg) {
 }
 
 export function dispatch(type, payload, debug) {
+  payload['time'] = Date.now();
   exports.pushLog(type, payload, debug);
   return Promise.resolve(redux.store.dispatch({ type, payload }));
 };
 
 export function dispatchAction(action, debug) {
+  action.payload['time'] = Date.now();
   exports.pushLog(action.type, action.payload, debug);
   return Promise.resolve(redux.store.dispatch(action));
 }

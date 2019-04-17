@@ -40,7 +40,9 @@ class LoadWorldScreen extends dom.globals.me.Stage {
     const { me } = dom.globals;
     const { user } = this.game.getState().user;
 
-    me.plugins.debugPanel.show();
+    if (process.env.NODE_ENV != 'test') {
+      me.plugins.debugPanel.show();
+    }
 
     me.loader.onload = this.loaded.bind(this);
 

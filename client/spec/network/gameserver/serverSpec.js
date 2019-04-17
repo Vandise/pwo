@@ -186,21 +186,25 @@ describe('GameServer Middleware', () => {
         expect(player.pos).to.deep.equal(position);
       });
 
-      it('displays the message confirm modal', (done) => {
-        const position = { x: 100, y: 100 };
-        const velocity = {  x: 0, y:0 };
-        mockMiddleware(store)(() => true)({
-          type: `${id}_*`, payload: {
-            type: events.SERVER.PLAYER.UPDATE_POSITION, data: { position , velocity }
-          }
+      describe('when displayNotification is present', () => {
+
+        it('displays the message confirm modal', (done) => {
+          const position = { x: 100, y: 100 };
+          const velocity = {  x: 0, y:0 };
+          mockMiddleware(store)(() => true)({
+            type: `${id}_*`, payload: {
+              type: events.SERVER.PLAYER.UPDATE_POSITION, data: { position , velocity, displayNotification: true }
+            }
+          });
+
+          setTimeout(() => {
+            expect(dispatcher.dispatchAction).to.have.been.calledWith(
+              dispatcher.actions.forms.TOGGLE_FORM('message', true)
+            );
+            done();
+          }, 100);
         });
 
-        setTimeout(() => {
-          expect(dispatcher.dispatchAction).to.have.been.calledWith(
-            dispatcher.actions.forms.TOGGLE_FORM('message', true)
-          );
-          done();
-        }, 100);
       });
     });
   });

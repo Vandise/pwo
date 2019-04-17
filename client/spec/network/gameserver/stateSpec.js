@@ -5,12 +5,16 @@ describe('GameServer Middleware', () => {
   let store;
   let mockMiddleware;
   let socketMiddleware;
+  let dispatcher;
 
 
   const stubMiddleware = () => {
     const GameServerModule = require('Network/gameserver');
 
     store = require('Redux/').default.store;
+
+    dispatcher = require('Util/dispatcher');
+    td.replace(dispatcher, 'dispatchAction', sinon.stub())
 
     socketMiddleware = GameServerModule.middleware;
     id = GameServerModule.id;
@@ -60,7 +64,7 @@ describe('GameServer Middleware', () => {
       });
 
       it('dispatches SET_CONNECTION_STATUS', () => {
-        expect(store.dispatch).to.have.been.calledWith({ type: 'SET_CONNECTION_STATUS', payload: { status: true } });
+        expect(dispatcher.dispatchAction).to.have.been.calledWith({ type: 'SET_CONNECTION_STATUS', payload: { status: true } });
       });
 
       it('triggers preloadAssets on the bootloader', () => {
