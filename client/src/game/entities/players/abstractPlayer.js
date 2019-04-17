@@ -40,7 +40,6 @@ export default class AbstractPlayer extends dom.globals.me.Entity {
 
   moveLeft() {
     this.currentDirection = 'left';
-
     this.body.vel.x = -MOVEMENT_VELOCITY;
     this.body.vel.y = 0;
 

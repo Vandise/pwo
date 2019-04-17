@@ -18,6 +18,10 @@ module.exports = function(x, y, w, h) {
     set: sinon.spy()
   };
 
+  this.current = {
+    name: sinon.stub()
+  };
+
   this.resize = sinon.spy();
 
   this.getWidth = function() { return this.width; };
@@ -28,5 +32,5 @@ module.exports = function(x, y, w, h) {
   this.fillRect = sinon.spy();
   this.addAnimation = sinon.spy();
   this.setCurrentAnimation = sinon.spy();
-  this.isCurrentAnimation = sinon.spy();
+  this.isCurrentAnimation = sinon.stub();
 };
