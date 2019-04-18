@@ -13,6 +13,7 @@ export default (server) => {
     if (data.success == true) {
       socket.player = {
         id: data.user.id,
+        username: data.user.username,
         position: data.user.position,
         spritesheet: data.user.spritesheet,
         hackFlags: {

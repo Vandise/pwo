@@ -2,29 +2,13 @@ import Events from '../../../shared/events';
 import originPayload from '../../../shared/helpers/socketOriginPayload';
 
 const SEVER_VELOCITY = 2.5;
-const POSITION_THRESHOLD = 5; // x-y margin of error for client-server position
+const POSITION_THRESHOLD = 120; // x-y margin of error for client-server position
 
-const clientServerPositionCheck = (clientPosition, serverPosition, velocity) => {
-  // todo:
-  //  validate the time it took to travel this distance for legitimate speedhack detection
-  //  not just warping to invalid coords
-  if (velocity.x == 0 && velocity.y == 0) {
-    return true;
-  }
-
-  console.log("clientServerPositionCheck: \n\n", clientPosition, serverPosition);
-
-  const xValid = (
-    Math.abs(clientPosition.x) >= (Math.abs(serverPosition.x) - POSITION_THRESHOLD)
-    && Math.abs(clientPosition.x) <= (Math.abs(serverPosition.x) + POSITION_THRESHOLD)
-  );
-  const yValid = (
-    Math.abs(clientPosition.y) >= (Math.abs(serverPosition.y) - POSITION_THRESHOLD)
-    && Math.abs(clientPosition.y) <= (Math.abs(serverPosition.y) + POSITION_THRESHOLD)
-  );
-
-  return (xValid && yValid);
-};
+//
+//  TODO
+//    speed hack check
+//    (lastCommandTime + intervalTime) > now
+//
 
 export default (server, socketID) => {
   let socket = server.connections[socketID];
@@ -39,23 +23,6 @@ export default (server, socketID) => {
     const direction = data.direction;
     const velocity = data.velocity;
     const clientPosition = data.position;
-
-    const positionValid = clientServerPositionCheck(clientPosition, socket.player.position, velocity)
-
-    server.logger.info(`Position valid: ${positionValid}`);
-
-
-    //
-    // speed hack check
-    //  (lastCommandTime + intervalTime) > now
-    //
-    if (!positionValid) {
-      server.logger.info(`Player: ${socket.player.id} - client movement velocity incorrect`);
-      server.logger.info(`Server Position: ${JSON.stringify(socket.player.position)}`);
-      server.logger.info(`Client Position: ${JSON.stringify(clientPosition)}`);
-
-      socket.player.hackFlags.speedhack = true;
-    }
 
     if(!socket.player.hackFlags.speedhack) {
 
@@ -90,22 +57,7 @@ export default (server, socketID) => {
       }
 
     } else {
-
       server.logger.info(`SpeedHack Flag`);
-
-      socket.emit(Events.SERVER.PLAYER.UPDATE_POSITION, originPayload({
-        position: socket.player.position,
-        velocity: { x: 0, y: 0 }
-      }, socket));
-
-      socket.broadcast.to(world).emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
-        position: socket.player.position,
-        playerID: socket.player.id,
-        velocity: { x: 0, y: 0 },
-        type: 'setpos',
-        force: true
-      }, socket));
-
       socket.player.hackFlags.speedhack = false;
     }
   });

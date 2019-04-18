@@ -4,6 +4,7 @@ import originPayload from '../../../shared/helpers/socketOriginPayload';
 import Constants from '../../../shared/constants';
 
 const TWEEN_PLAYER_POSITIONS_INT = 2000;
+const ZERO_VELOCITY = { x: 0, y: 0 };
 
 //
 // notify all sockets in the world of their current server positions
@@ -19,15 +20,18 @@ const tweenPlayerPositions = (server, world) => {
       for( let currentID in worldRoom.sockets ) {
 
         const currentSocket = server.connections[currentID];
-
-        emitUpdateOtherPlayer(currentSocket, {
+        const payload = {
           position: currentSocket.player.position,
-          velocity: { x: 0, y: 0 },
+          velocity: ZERO_VELOCITY,
           playerID: currentSocket.player.id,
           spritesheet: currentSocket.player.spritesheet,
+          username: currentSocket.player.username,
           type: 'setpos',
           force: false
-        }, currentSocket, world);
+        };
+
+        currentSocket.emit(Events.SERVER.PLAYER.UPDATE_POSITION, originPayload(payload, currentSocket));
+        emitUpdateOtherPlayer(currentSocket, payload, currentSocket, world);
 
       }
     }
@@ -85,9 +89,10 @@ export default (server, socket) => {
 
           originSocket.emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
             position: otherPlayerSocket.player.position,
-            velocity: { x: 0, y: 0 },
+            velocity: ZERO_VELOCITY,
             playerID: otherPlayerSocket.player.id,
             spritesheet: otherPlayerSocket.player.spritesheet,
+            username: otherPlayerSocket.player.username,
             type: 'setpos',
             force: false
           }, socket));
@@ -100,9 +105,10 @@ export default (server, socket) => {
       //
       originSocket.broadcast.to(originSocket.world).emit(Events.SERVER.PLAYER.UPDATE_OTHER_PLAYER, originPayload({
         position: originSocket.player.position,
-        velocity: { x: 0, y: 0 },
+        velocity: ZERO_VELOCITY,
         playerID: originSocket.player.id,
         spritesheet: originSocket.player.spritesheet,
+        username: originSocket.player.username,
         type: 'setpos',
         force: false
       }, socket));
