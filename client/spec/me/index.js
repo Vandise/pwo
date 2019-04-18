@@ -12,5 +12,8 @@ module.exports = {
   ColorLayer: require('./colorLayer'),
   pool: require('./pool'),
   Entity: require('./entity'),
-  levelDirector: require('./levelDirector')
+  levelDirector: require('./levelDirector'),
+  Rect: require('./rect'),
+  input: require('./input'),
+  collision: require('./collision')
 };

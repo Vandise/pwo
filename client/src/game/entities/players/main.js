@@ -35,7 +35,11 @@ export default class MainPlayer extends AbstractPlayer {
     this.setDirectionChangeNotifier(this.notifyVelocityChange.bind(this));
   }
 
-  notifyVelocityChange(direction) {
+  notifyVelocityChange(direction, pointPos = {}) {
+
+    const x = pointPos.x || this.pos.x;
+    const y = pointPos.y || this.pos.y;
+
     //
     // only send notifications to others
     // on velocity change, not position
@@ -45,11 +49,7 @@ export default class MainPlayer extends AbstractPlayer {
       payload: {
         direction: this.currentDirection,
         velocity: this.body.vel,
-        time: Date.now(),
-        position: {
-          x: this.pos.x,
-          y: this.pos.y
-        }
+        position: {x, y}
       }
     });
 
@@ -57,18 +57,18 @@ export default class MainPlayer extends AbstractPlayer {
 
   handleMovement() {
     if (this.me.input.isKeyPressed('left')) {
-      super.moveLeft();
+      this.moveLeft();
     }
     else if (this.me.input.isKeyPressed('right')) {
-      super.moveRight();
+      this.moveRight();
     }
     else if (this.me.input.isKeyPressed('up')) {
-      super.moveUp();
+      this.moveUp();
     }
     else if (this.me.input.isKeyPressed('down')) {
-      super.moveDown();
+      this.moveDown();
     } else {
-      super.idle();
+      this.idle();
     }
   }
 
