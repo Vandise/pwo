@@ -45,7 +45,7 @@ module.exports = {
     alias: {
       Root: path.resolve(__dirname, 'src'),
       Game: path.resolve(__dirname, 'src/game'),
-      Events: path.resolve(__dirname, '../shared/events'),
+      Events: path.resolve(__dirname, '../servers/src/shared/events'),
       Network: path.resolve(__dirname, 'src/network'),
       Redux: path.resolve(__dirname, 'src/redux'),
       Extensions: path.resolve(__dirname, 'src/ext'),

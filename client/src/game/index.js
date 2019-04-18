@@ -40,6 +40,13 @@ class Game {
     return dom.globals.me.game.world.getChildByName(name)[0];
   }
 
+  removeOtherPlayer(name) {
+    const player = dom.globals.me.game.world.getChildByName(name)[0];
+    if (player) {
+      dom.globals.me.game.world.removeChild(player);
+    }
+  }
+
   ready() {
     this.readyStatus = true;
   }

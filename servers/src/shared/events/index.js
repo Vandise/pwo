@@ -19,7 +19,8 @@ module.exports = {
 
     PLAYER: {
       UPDATE_POSITION: 'player_update_position',
-      UPDATE_OTHER_PLAYER: 'player_update_other_position'
+      UPDATE_OTHER_PLAYER: 'player_update_other_position',
+      DISCONNECTED: 'player_disconnected'
     }
   },
 

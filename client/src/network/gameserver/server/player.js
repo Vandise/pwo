@@ -112,6 +112,23 @@ const UPDATE_OTHER_PLAYER = {
   dispatch: dispatchUpdateOtherPlayer
 };
 
+
+/*
+  
+    player disconnected
+  
+*/
+
+export const dispatchPlayerDisconnected = (action, data, dispatch) => {
+  const name = `player_${data.playerID}`;
+  Game.removeOtherPlayer(name);
+};
+
+const PLAYER_DISCONNECTED = {
+  action: events.SERVER.PLAYER.DISCONNECTED,
+  dispatch: dispatchPlayerDisconnected
+};
+
 /*
   
     exports
@@ -120,5 +137,6 @@ const UPDATE_OTHER_PLAYER = {
 
 export default [
   UPDATE_POSITION,
-  UPDATE_OTHER_PLAYER
+  UPDATE_OTHER_PLAYER,
+  PLAYER_DISCONNECTED
 ];

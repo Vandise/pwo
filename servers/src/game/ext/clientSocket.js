@@ -1,5 +1,6 @@
 import channels from '../channels/client';
 import Constants from '../../shared/constants';
+import Events from '../../shared/events';
 
 export default (server) => {
 
@@ -14,6 +15,15 @@ export default (server) => {
 
     socket.on('disconnect', () => {
       server.logger.info(`Client Disconnected: ${socket.id}`);
+
+      console.log(socket.world, Events.SERVER.PLAYER.DISCONNECTED);
+
+      if (socket.world) {
+        server.io.to(socket.world).emit(Events.SERVER.PLAYER.DISCONNECTED, {
+          playerID: socket.player.id,
+        });
+      }
+
       delete server.connections[socket.id];
     });
 
