@@ -20,7 +20,7 @@ entries.push('./src/index.js');
 module.exports = {
   entry: entries,
   output: {
-    path: path.join(__dirname, "public"),
+    path: path.join(__dirname, "bin"),
     filename: 'bundle.js'
   },
   resolveLoader: {
@@ -31,8 +31,8 @@ module.exports = {
       onBuildStart:['node scripts/generateResources.js']
     }),
     new CopyWebpackPlugin([
-      { from: './resources/public/', to: path.join(__dirname, "public")},
-      { from: './resources/', to: path.join(__dirname, "public/resources")},
+      { from: './resources/public/', to: path.join(__dirname, "bin")},
+      { from: './resources/', to: path.join(__dirname, "bin/resources")},
     ]),
     new webpack.DefinePlugin({
       'process.env': {

@@ -17,6 +17,8 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.11.0",
     "csv-parse": "^1.1.7",
+    "electron": "^4.1.4",
+    "electron-packager": "^13.1.1",
     "enzyme": "^2.0.0",
     "eslint": "^1.9.0",
     "eslint-loader": "^1.1.1",
@@ -41,6 +43,7 @@
   "dependencies": {
     "babel-runtime": "^6.3.13",
     "immutable": "^3.8.1",
+    "mime": "^2.4.2",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
@@ -51,9 +54,14 @@
     "socketio": "^1.0.0"
   },
   "scripts": {
+    "clean": "rm -rf dist && rm -rf bin && mkdir dist && mkdir bin",
     "parse_sections": "node ./bin/build_sections.js",
     "start": "NODE_ENV=development node scripts/server.js",
-    "build": "webpack --config webpack.production.config.js",
+    "build": "webpack --config webpack.config.js",
+    "electron:bundle": "cp package.json bin/ && cp src/electron/index.js bin/ && cd bin/ && npm install --only=production",
+    "build:electron": "electron-packager bin/. --out=dist --overwrite",
+    "electron": "electron bin/.",
+    "distribute": "npm run clean && npm run build && npm run electron:bundle && npm run build:electron",
     "test:watch": "./node_modules/mocha-webpack/bin/mocha-webpack --watch",
     "test": "NODE_ENV=test ./node_modules/mocha-webpack/bin/mocha-webpack"
   }
