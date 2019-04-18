@@ -18,10 +18,13 @@ body {
 }
 
 #screen {
-  position: fixed;
+  position: absolute;
+  top: 40.4px;
+  left:27.3px;
 }
 
 canvas {
   position: absolute;
   z-index: 1;
+  /* w=997, h=750 */
 }

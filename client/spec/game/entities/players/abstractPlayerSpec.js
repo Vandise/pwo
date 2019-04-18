@@ -55,6 +55,32 @@ describe('AbstractPlayer', () => {
     });
   });
 
+  describe('setNameVisibility', () => {
+  	it('sets the nameVisible status', () => {
+    	concretePlayer.setNameVisibility(true);
+    	expect(concretePlayer.nameVisible).to.equal(true);
+  	});
+  });
+
+  describe('setUsername', () => {
+  	it('sets the username', () => {
+    	concretePlayer.setUsername('test');
+    	expect(concretePlayer.username).to.equal('test');
+  	});
+  });
+
+  describe('draw', () => {
+    it('draws nameText when nameVisible', () => {
+
+      const spy = sinon.spy(concretePlayer.nameText, 'draw');
+
+      concretePlayer.setNameVisibility(true);
+      concretePlayer.draw();
+
+      expect(spy).to.have.been.called;
+    });
+  });
+
   describe('move', () => {
 
     beforeEach(() => {

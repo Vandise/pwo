@@ -30,6 +30,9 @@ class WorldScreen extends dom.globals.me.Stage {
       image: user.spritesheet
     });
 
+    player.setUsername(user.username);
+    player.setNameVisibility(true);
+
     me.game.world.addChild(player);
 
     this.game.setMainPlayerEntity(player);

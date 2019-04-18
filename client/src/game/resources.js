@@ -2666,6 +2666,11 @@ export default {
       "name": "boot_bg",
       "src": "/resources/public/img/boot_bg.jpg",
       "type": "image"
+    },
+    {
+      "name": "background",
+      "src": "/resources/public/img/gui/background.png",
+      "type": "image"
     }
   ],
   "sprites": [

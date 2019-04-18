@@ -20,6 +20,10 @@ var Entity = function(x, y, settings) {
 
 Entity.prototype.update = function(dt) {
 
-}
+};
+
+Entity.prototype.draw = function() {
+
+};
 
 module.exports = Entity;

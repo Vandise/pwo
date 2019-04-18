@@ -30,6 +30,8 @@ class Game {
     });
 
     player.name = id;
+    player.setUsername(payload.username);
+    player.setNameVisibility(true);
 
     dom.globals.me.game.world.addChild(player);
   }

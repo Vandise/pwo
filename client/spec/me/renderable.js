@@ -1,4 +1,4 @@
-module.exports = function(x, y, w, h) {
+var Renderable = function(x, y, w, h) {
 
   this.x = x;
   this.y = y;
@@ -34,3 +34,9 @@ module.exports = function(x, y, w, h) {
   this.setCurrentAnimation = sinon.spy();
   this.isCurrentAnimation = sinon.stub();
 };
+
+Renderable.prototype.draw = function() {
+  
+};
+
+module.exports = Renderable;

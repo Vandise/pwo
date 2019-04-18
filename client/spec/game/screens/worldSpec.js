@@ -30,7 +30,7 @@ describe('World Screen', () => {
     let player;
 
     beforeEach(() => {
-      player = { name: 'test' };
+      player = { name: 'test', setUsername: sinon.spy(), setNameVisibility: sinon.spy() };
       dom.globals.me.pool.pull.returns(player);
       screen.loadPlayer();
     });
@@ -41,6 +41,10 @@ describe('World Screen', () => {
 
     it('adds the player to the world', () => {
       expect(dom.globals.me.game.world.addChild).to.have.been.calledWith(player);
+    });
+
+    it('sets the username', () => {
+      expect(player.setUsername).to.have.been.called;
     });
   });
 

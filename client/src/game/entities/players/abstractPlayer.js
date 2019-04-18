@@ -1,4 +1,5 @@
 import * as dom from 'Util/dom';
+import PlayerNameText from 'Game/components/player/nameText';
 
 const MOVEMENT_VELOCITY = 2.5;
 const MOVEMENT_FRAME_SPEED = 150;
@@ -12,6 +13,17 @@ export default class AbstractPlayer extends dom.globals.me.Entity {
     this.heading = { y: 0, x: 0 };
     this.currentDirection = DEFAULT_DIRECTION;
     this.notifyDirectionChange = () => true;
+    this.nameVisible = false;
+    this.username = null;
+    this.nameText = new PlayerNameText(0, 0, this);
+  }
+
+  setNameVisibility(status) {
+    this.nameVisible = status;
+  }
+
+  setUsername(name) {
+    this.username = name;
   }
 
   setHeading(x, y) {
@@ -90,6 +102,13 @@ export default class AbstractPlayer extends dom.globals.me.Entity {
     if (!this.renderable.isCurrentAnimation(animation)) {
       this.renderable.setCurrentAnimation(animation);
       this.notifyDirectionChange(this.renderable.current.name);
+    }
+  }
+
+  draw(context) {
+    super.draw(context);
+    if (this.nameVisible) {
+      this.nameText.draw(context);
     }
   }
 }

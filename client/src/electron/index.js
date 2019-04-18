@@ -22,7 +22,9 @@ function handleRequest(req, res) {
 }
 
 function createWindow () {
-  let win = new BrowserWindow({ width: 900, height: 600 });
+  let win = new BrowserWindow({ width: 1040, height: 830,
+    transparent: false,
+  });
   win.loadURL('http://localhost:8080/index.html');
 }
 

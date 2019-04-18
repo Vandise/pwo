@@ -54,7 +54,7 @@ export class Bootstrap {
   }
 
   initVideoBootScreen() {
-    if (!this.me.video.init(600, 400, { wrapper: "screen", scale: 1.5, scaleMethod: "fill-max" })) {
+    if (!this.me.video.init(601, 451.8, { wrapper: "screen", scale: 1.66, scaleMethod: "fill-max" })) {
       return;
     }
 
