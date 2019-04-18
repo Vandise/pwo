@@ -208,6 +208,20 @@ describe('GameServer Middleware', () => {
       });
     });
 
+    describe('PLAYER_DISCONNECTED', () => {
+    	it('removes the other player from the world', () => {
+      	td.replace(game, 'removeOtherPlayer', sinon.spy());
+
+        mockMiddleware(store)(() => true)({
+          type: `${id}_*`, payload: {
+            type: events.SERVER.PLAYER.DISCONNECTED, data: { playerID: 1 }
+          }
+        });
+
+        expect(game.removeOtherPlayer).to.have.been.called;
+    	});
+    });
+
     describe('UPDATE_OTHER_PLAYER', () => {
       const data = { playerID: 1, position: { x: 100, y: 100 }, velocity: {  x: 0, y:0 } };
 
