@@ -12,7 +12,8 @@ var melontypes = {
   binary: ['fnt', 'ltr', 'ttf'],
   tmx: ['tmx'],
   tsx: ['tsx'],
-  audio: ['mp3', 'ogg']
+  audio: ['mp3', 'ogg'],
+  js: ['js']
 };
 
 /*
