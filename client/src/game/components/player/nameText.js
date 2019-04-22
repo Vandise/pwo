@@ -7,7 +7,7 @@ export default class PlayerNameText extends dom.globals.me.Renderable {
 
     this.player = player;
 
-    this.text = new me.Text(0, -35, {
+    this.text = new me.Text(25, 0, {
       font: 'century gothic',
       size: 15,
       fillStyle: 'white',
@@ -16,7 +16,8 @@ export default class PlayerNameText extends dom.globals.me.Renderable {
       text: this.player.username
     });
 
-    this.text.anchorPoint.set(0.0, 0.0);
+    this.text.anchorPoint.set(0.5, 0.0);
+    this.anchorPoint.set(0.5, 0.0);
 
     window.playerText = this.text;
 

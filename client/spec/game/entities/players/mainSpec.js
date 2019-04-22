@@ -36,7 +36,7 @@ describe('MainPlayer', () => {
     });
 
     it('sets the anchor point', () => {
-      expect(player.anchorPoint.set).to.have.been.calledWith(-0.45, -0.6);
+      expect(player.anchorPoint.set).to.have.been.calledWith(0.5, 0.5);
     });
 
     it('tells the viewport to follow this entity', () => {

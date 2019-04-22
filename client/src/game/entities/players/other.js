@@ -3,6 +3,8 @@ import * as Dispatcher from 'Util/dispatcher';
 import events from 'Events/';
 
 import AbstractPlayer from './abstractPlayer';
+import Collisions from 'Game/entities/collision';
+import anchorPoint from 'Game/entities/util/anchorPoint';
 
 const MOVEMENT_VELOCITY = 2.5;
 const MOVEMENT_FRAME_SPEED = 150;
@@ -23,11 +25,13 @@ export default class OtherPlayer extends AbstractPlayer {
     this.body.setVelocity(2.5, 2.5);
     this.body.setFriction(0.4,0.4);
     this.alwaysUpdate = true;
-    this.anchorPoint.set(-0.45, -0.6);
+    this.body.collisionType = Collisions.OTHER_PLAYER;
 
     this.heading = { x: 0, y: 0 };
 
     super.addAnimations();
+
+    anchorPoint(this);
   }
 
   move(data) {

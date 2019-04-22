@@ -1,21 +1,39 @@
 import * as dom from 'Util/dom';
 import PlayerNameText from 'Game/components/player/nameText';
+import Collision from 'Game/entities/collision';
 
 const MOVEMENT_VELOCITY = 2.5;
 const MOVEMENT_FRAME_SPEED = 150;
 const DEFAULT_DIRECTION = 'up';
+const TEXT_TOGGLE_DURATION = 2000;
 
 export default class AbstractPlayer extends dom.globals.me.Entity {
 
   constructor(x, y, settings) {
     super(x, y, settings);
 
+    this.settings = settings;
     this.heading = { y: 0, x: 0 };
-    this.currentDirection = DEFAULT_DIRECTION;
+    this.currentDirection = settings.direction || DEFAULT_DIRECTION;
     this.notifyDirectionChange = () => true;
     this.nameVisible = false;
     this.username = null;
     this.nameText = new PlayerNameText(0, 0, this);
+
+    this.children.forEach((c) => {
+      c.anchorPoint.set(0, 0);
+    });
+  }
+
+  togglePlayerText(text, duration = TEXT_TOGGLE_DURATION) {
+    if (this.nameVisible == true) { return; }
+
+    this.setUsername(text);
+    this.setNameVisibility(true);
+
+    setTimeout(() => {
+      this.setNameVisibility(false);
+    }, duration);
   }
 
   setNameVisibility(status) {

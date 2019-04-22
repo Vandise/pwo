@@ -3,6 +3,8 @@ import * as Dispatcher from 'Util/dispatcher';
 import events from 'Events/';
 
 import AbstractPlayer from './abstractPlayer';
+import Collisions from 'Game/entities/collision';
+import anchorPoint from 'Game/entities/util/anchorPoint';
 
 const MOVEMENT_VELOCITY = 2.5;
 const MOVEMENT_FRAME_SPEED = 150;
@@ -23,10 +25,17 @@ export default class MainPlayer extends AbstractPlayer {
 
     this.me = dom.globals.me;
 
+    anchorPoint(this);
+
+    this.body.collisionType = me.collision.types.PLAYER_OBJECT;
     this.body.setVelocity(2.5, 2.5);
     this.body.setFriction(0.4,0.4);
     this.alwaysUpdate = true;
-    this.anchorPoint.set(-0.45, -0.6);
+
+    this.body.setCollisionMask(
+        me.collision.types.WORLD_SHAPE |
+        Collisions.NPC
+    );
 
     this.me.game.viewport.follow(this, this.me.game.viewport.AXIS.BOTH);
 
@@ -85,6 +94,10 @@ export default class MainPlayer extends AbstractPlayer {
   }
 
   onCollision(response, other) {
-    return false;
+    if( response.b.body.collisionType == Collisions.NPC ) {
+      other.togglePlayerText('hello world!');
+    }
+
+    return true;
   }
 }
