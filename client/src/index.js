@@ -38,6 +38,7 @@ export class Bootstrap {
   preloadAssets() {
     this.me.loader.preload(
       Game.resources.sprites
+        .concat(Game.resources.text)
         .concat(Game.resources.tiles)
         .concat(Game.resources.tiles_animated)
     );
@@ -86,6 +87,10 @@ export class Bootstrap {
   }
 
   loaded() {
+    Game.gameText.addResources(
+      dom.globals.me.loader.getJSON('gametext')
+    );
+
     this.me.state.change(Constants.STATES.LOGIN);
   }
 

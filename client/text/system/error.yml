@@ -1,0 +1,3 @@
+name: 'errors'
+type: 'system'
+invalid_credentials: 'Username and password provided are incorrect.'

@@ -1,0 +1,9 @@
+name: 'menus'
+type: 'system'
+
+# login screen
+
+auth_heading: 'Login'
+username_label: 'Account'
+password_label: 'Password'
+login_button: 'Login'

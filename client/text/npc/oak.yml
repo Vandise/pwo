@@ -1,0 +1,5 @@
+name: 'oak'
+type: 'npc'
+display_name: 'Professor Oak'
+text:
+  - 'Hello, my name is Professor Oak!'

@@ -13,7 +13,8 @@ var melontypes = {
   tmx: ['tmx'],
   tsx: ['tsx'],
   audio: ['mp3', 'ogg'],
-  js: ['js']
+  js: ['js'],
+  json: ['json']
 };
 
 /*

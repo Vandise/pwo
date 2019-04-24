@@ -1,4 +1,5 @@
 module.exports = {
   onload: null,
-  preload: sinon.spy()
+  preload: sinon.spy(),
+  getJSON: sinon.stub().returns([])
 };

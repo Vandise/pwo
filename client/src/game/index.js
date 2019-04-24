@@ -3,6 +3,7 @@ import redux from 'Redux/';
 import * as dom from 'Util/dom';
 import MapLoader from 'Extensions/map/mapLoader';
 import entities from 'Game/entities/';
+import GameText from 'Extensions/text';
 
 //
 // TODO: unit tests after refactoring / finalizing functionality
@@ -16,6 +17,7 @@ class Game {
     this.mainPlayerEntity = null;
     this.readyStatus = false;
     window.game = this;
+    this.gameText = new GameText();
   }
 
   //
